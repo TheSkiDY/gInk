@@ -1,0 +1,11 @@
+build
+release
+bin/crash.txt
+
+*.pdb
+*.exp
+*.sdf
+*.suo
+*.opensdf
+*.lnk
+*vshost.exe*
