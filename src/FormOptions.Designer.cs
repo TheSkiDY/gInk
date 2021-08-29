@@ -56,6 +56,8 @@
             this.comboCanvasCursor = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tbCursorsize = new System.Windows.Forms.TrackBar();
+            this.lbCursorsize = new System.Windows.Forms.Label();
             this.lbLanguage = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
@@ -85,6 +87,7 @@
             this.hiGlobal = new gInk.HotkeyInputBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +96,7 @@
             // 
             this.cbEraserEnabled.AutoSize = true;
             this.cbEraserEnabled.Location = new System.Drawing.Point(52, 100);
-            this.cbEraserEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbEraserEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbEraserEnabled.Name = "cbEraserEnabled";
             this.cbEraserEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbEraserEnabled.TabIndex = 0;
@@ -104,7 +107,7 @@
             // 
             this.cbPointerEnabled.AutoSize = true;
             this.cbPointerEnabled.Location = new System.Drawing.Point(183, 100);
-            this.cbPointerEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbPointerEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbPointerEnabled.Name = "cbPointerEnabled";
             this.cbPointerEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbPointerEnabled.TabIndex = 0;
@@ -115,7 +118,7 @@
             // 
             this.cbSnapEnabled.AutoSize = true;
             this.cbSnapEnabled.Location = new System.Drawing.Point(434, 101);
-            this.cbSnapEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbSnapEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbSnapEnabled.Name = "cbSnapEnabled";
             this.cbSnapEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbSnapEnabled.TabIndex = 0;
@@ -126,7 +129,7 @@
             // 
             this.cbUndoEnabled.AutoSize = true;
             this.cbUndoEnabled.Location = new System.Drawing.Point(503, 101);
-            this.cbUndoEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbUndoEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbUndoEnabled.Name = "cbUndoEnabled";
             this.cbUndoEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbUndoEnabled.TabIndex = 0;
@@ -137,7 +140,7 @@
             // 
             this.cbClearEnabled.AutoSize = true;
             this.cbClearEnabled.Location = new System.Drawing.Point(568, 101);
-            this.cbClearEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbClearEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbClearEnabled.Name = "cbClearEnabled";
             this.cbClearEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbClearEnabled.TabIndex = 0;
@@ -148,7 +151,7 @@
             // 
             this.cbWidthEnabled.AutoSize = true;
             this.cbWidthEnabled.Location = new System.Drawing.Point(296, 102);
-            this.cbWidthEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbWidthEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbWidthEnabled.Name = "cbWidthEnabled";
             this.cbWidthEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbWidthEnabled.TabIndex = 0;
@@ -159,18 +162,18 @@
             // 
             this.cbWhiteIcon.AutoSize = true;
             this.cbWhiteIcon.Location = new System.Drawing.Point(14, 376);
-            this.cbWhiteIcon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbWhiteIcon.Margin = new System.Windows.Forms.Padding(4);
             this.cbWhiteIcon.Name = "cbWhiteIcon";
-            this.cbWhiteIcon.Size = new System.Drawing.Size(149, 21);
+            this.cbWhiteIcon.Size = new System.Drawing.Size(121, 21);
             this.cbWhiteIcon.TabIndex = 0;
-            this.cbWhiteIcon.Text = "Use white tray icon";
+            this.cbWhiteIcon.Text = "Use white icon";
             this.cbWhiteIcon.UseVisualStyleBackColor = true;
             this.cbWhiteIcon.CheckedChanged += new System.EventHandler(this.cbWhiteIcon_CheckedChanged);
             // 
             // tbSnapPath
             // 
-            this.tbSnapPath.Location = new System.Drawing.Point(236, 242);
-            this.tbSnapPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbSnapPath.Location = new System.Drawing.Point(236, 312);
+            this.tbSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.tbSnapPath.Name = "tbSnapPath";
             this.tbSnapPath.Size = new System.Drawing.Size(335, 22);
             this.tbSnapPath.TabIndex = 1;
@@ -179,7 +182,7 @@
             // lbSnapshotsavepath
             // 
             this.lbSnapshotsavepath.AutoSize = true;
-            this.lbSnapshotsavepath.Location = new System.Drawing.Point(11, 249);
+            this.lbSnapshotsavepath.Location = new System.Drawing.Point(12, 315);
             this.lbSnapshotsavepath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSnapshotsavepath.Name = "lbSnapshotsavepath";
             this.lbSnapshotsavepath.Size = new System.Drawing.Size(134, 17);
@@ -188,8 +191,8 @@
             // 
             // btSnapPath
             // 
-            this.btSnapPath.Location = new System.Drawing.Point(580, 242);
-            this.btSnapPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btSnapPath.Location = new System.Drawing.Point(579, 309);
+            this.btSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.btSnapPath.Name = "btSnapPath";
             this.btSnapPath.Size = new System.Drawing.Size(41, 28);
             this.btSnapPath.TabIndex = 3;
@@ -231,7 +234,7 @@
             "Arrow",
             "Pen tip"});
             this.comboCanvasCursor.Location = new System.Drawing.Point(236, 199);
-            this.comboCanvasCursor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboCanvasCursor.Margin = new System.Windows.Forms.Padding(4);
             this.comboCanvasCursor.Name = "comboCanvasCursor";
             this.comboCanvasCursor.Size = new System.Drawing.Size(335, 24);
             this.comboCanvasCursor.TabIndex = 6;
@@ -253,6 +256,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage1.Controls.Add(this.tbCursorsize);
+            this.tabPage1.Controls.Add(this.lbCursorsize);
             this.tabPage1.Controls.Add(this.lbLanguage);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.comboLanguage);
@@ -279,6 +284,24 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             // 
+            // tbCursorsize
+            // 
+            this.tbCursorsize.Location = new System.Drawing.Point(236, 249);
+            this.tbCursorsize.Maximum = 4;
+            this.tbCursorsize.Name = "tbCursorsize";
+            this.tbCursorsize.Size = new System.Drawing.Size(335, 56);
+            this.tbCursorsize.TabIndex = 10;
+            this.tbCursorsize.ValueChanged += new System.EventHandler(this.tbCursorsize_ValueChanged);
+            // 
+            // lbCursorsize
+            // 
+            this.lbCursorsize.AutoSize = true;
+            this.lbCursorsize.Location = new System.Drawing.Point(12, 258);
+            this.lbCursorsize.Name = "lbCursorsize";
+            this.lbCursorsize.Size = new System.Drawing.Size(79, 17);
+            this.lbCursorsize.TabIndex = 9;
+            this.lbCursorsize.Text = "Cursor size";
+            // 
             // lbLanguage
             // 
             this.lbLanguage.AutoSize = true;
@@ -294,7 +317,7 @@
             this.pictureBox1.BackgroundImage = global::gInk.Properties.Resources.paneloption;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox1.Location = new System.Drawing.Point(11, 18);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(623, 65);
             this.pictureBox1.TabIndex = 7;
@@ -305,7 +328,7 @@
             this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboLanguage.FormattingEnabled = true;
             this.comboLanguage.Location = new System.Drawing.Point(236, 156);
-            this.comboLanguage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.comboLanguage.Name = "comboLanguage";
             this.comboLanguage.Size = new System.Drawing.Size(335, 24);
             this.comboLanguage.TabIndex = 6;
@@ -315,7 +338,7 @@
             // 
             this.cbInkVisibleEnabled.AutoSize = true;
             this.cbInkVisibleEnabled.Location = new System.Drawing.Point(366, 101);
-            this.cbInkVisibleEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbInkVisibleEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbInkVisibleEnabled.Name = "cbInkVisibleEnabled";
             this.cbInkVisibleEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbInkVisibleEnabled.TabIndex = 0;
@@ -326,7 +349,7 @@
             // 
             this.cbPanEnabled.AutoSize = true;
             this.cbPanEnabled.Location = new System.Drawing.Point(116, 100);
-            this.cbPanEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbPanEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbPanEnabled.Name = "cbPanEnabled";
             this.cbPanEnabled.Size = new System.Drawing.Size(18, 17);
             this.cbPanEnabled.TabIndex = 0;
@@ -337,7 +360,7 @@
             // 
             this.cbAllowDragging.AutoSize = true;
             this.cbAllowDragging.Location = new System.Drawing.Point(14, 405);
-            this.cbAllowDragging.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbAllowDragging.Margin = new System.Windows.Forms.Padding(4);
             this.cbAllowDragging.Name = "cbAllowDragging";
             this.cbAllowDragging.Size = new System.Drawing.Size(264, 21);
             this.cbAllowDragging.TabIndex = 0;
@@ -349,9 +372,9 @@
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage2.Size = new System.Drawing.Size(1261, 535);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Pens";
@@ -379,7 +402,7 @@
             this.tabPage3.Controls.Add(this.hiEraser);
             this.tabPage3.Controls.Add(this.hiGlobal);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1261, 535);
             this.tabPage3.TabIndex = 2;
@@ -389,7 +412,7 @@
             // 
             this.cbAllowHotkeyInPointer.AutoSize = true;
             this.cbAllowHotkeyInPointer.Location = new System.Drawing.Point(25, 107);
-            this.cbAllowHotkeyInPointer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbAllowHotkeyInPointer.Margin = new System.Windows.Forms.Padding(4);
             this.cbAllowHotkeyInPointer.Name = "cbAllowHotkeyInPointer";
             this.cbAllowHotkeyInPointer.Size = new System.Drawing.Size(474, 21);
             this.cbAllowHotkeyInPointer.TabIndex = 18;
@@ -495,7 +518,7 @@
             this.hiInkVisible.Hotkey = hotkey1;
             this.hiInkVisible.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiInkVisible.Location = new System.Drawing.Point(453, 249);
-            this.hiInkVisible.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiInkVisible.Margin = new System.Windows.Forms.Padding(4);
             this.hiInkVisible.Name = "hiInkVisible";
             this.hiInkVisible.RequireModifier = false;
             this.hiInkVisible.Size = new System.Drawing.Size(159, 22);
@@ -510,7 +533,7 @@
             this.hiSnapshot.Hotkey = hotkey2;
             this.hiSnapshot.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiSnapshot.Location = new System.Drawing.Point(453, 282);
-            this.hiSnapshot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiSnapshot.Margin = new System.Windows.Forms.Padding(4);
             this.hiSnapshot.Name = "hiSnapshot";
             this.hiSnapshot.RequireModifier = false;
             this.hiSnapshot.Size = new System.Drawing.Size(159, 22);
@@ -525,7 +548,7 @@
             this.hiClear.Hotkey = hotkey3;
             this.hiClear.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiClear.Location = new System.Drawing.Point(453, 382);
-            this.hiClear.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiClear.Margin = new System.Windows.Forms.Padding(4);
             this.hiClear.Name = "hiClear";
             this.hiClear.RequireModifier = false;
             this.hiClear.Size = new System.Drawing.Size(159, 22);
@@ -540,7 +563,7 @@
             this.hiPan.Hotkey = hotkey4;
             this.hiPan.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPan.Location = new System.Drawing.Point(453, 181);
-            this.hiPan.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiPan.Margin = new System.Windows.Forms.Padding(4);
             this.hiPan.Name = "hiPan";
             this.hiPan.RequireModifier = false;
             this.hiPan.Size = new System.Drawing.Size(159, 22);
@@ -555,7 +578,7 @@
             this.hiPointer.Hotkey = hotkey5;
             this.hiPointer.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPointer.Location = new System.Drawing.Point(453, 215);
-            this.hiPointer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiPointer.Margin = new System.Windows.Forms.Padding(4);
             this.hiPointer.Name = "hiPointer";
             this.hiPointer.RequireModifier = false;
             this.hiPointer.Size = new System.Drawing.Size(159, 22);
@@ -571,7 +594,7 @@
             this.hiRedo.Hotkey = hotkey6;
             this.hiRedo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiRedo.Location = new System.Drawing.Point(453, 348);
-            this.hiRedo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiRedo.Margin = new System.Windows.Forms.Padding(4);
             this.hiRedo.Name = "hiRedo";
             this.hiRedo.RequireModifier = false;
             this.hiRedo.Size = new System.Drawing.Size(159, 22);
@@ -586,7 +609,7 @@
             this.hiUndo.Hotkey = hotkey7;
             this.hiUndo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiUndo.Location = new System.Drawing.Point(453, 315);
-            this.hiUndo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiUndo.Margin = new System.Windows.Forms.Padding(4);
             this.hiUndo.Name = "hiUndo";
             this.hiUndo.RequireModifier = false;
             this.hiUndo.Size = new System.Drawing.Size(159, 22);
@@ -601,7 +624,7 @@
             this.hiEraser.Hotkey = hotkey8;
             this.hiEraser.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiEraser.Location = new System.Drawing.Point(453, 148);
-            this.hiEraser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiEraser.Margin = new System.Windows.Forms.Padding(4);
             this.hiEraser.Name = "hiEraser";
             this.hiEraser.RequireModifier = false;
             this.hiEraser.Size = new System.Drawing.Size(159, 22);
@@ -616,7 +639,7 @@
             this.hiGlobal.Hotkey = hotkey9;
             this.hiGlobal.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiGlobal.Location = new System.Drawing.Point(25, 48);
-            this.hiGlobal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hiGlobal.Margin = new System.Windows.Forms.Padding(4);
             this.hiGlobal.Name = "hiGlobal";
             this.hiGlobal.RequireModifier = true;
             this.hiGlobal.Size = new System.Drawing.Size(159, 22);
@@ -631,7 +654,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(649, 558);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "FormOptions";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -641,6 +664,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -695,5 +719,7 @@
 		private System.Windows.Forms.CheckBox cbAllowHotkeyInPointer;
 		private System.Windows.Forms.ComboBox comboLanguage;
 		private System.Windows.Forms.Label lbLanguage;
-	}
+        private System.Windows.Forms.TrackBar tbCursorsize;
+        private System.Windows.Forms.Label lbCursorsize;
+    }
 }

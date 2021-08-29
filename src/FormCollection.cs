@@ -680,7 +680,25 @@ namespace gInk
 
 				if (Root.CanvasCursor == 0)
 				{
-					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+					var size = Root.CursorSize;
+					switch(size)
+                    {
+						case 0:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
+							break;
+						case 1:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
+							break;
+						case 2:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
+							break;
+						case 3:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
+							break;
+						case 4:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
+							break;
+					}
 					IC.Cursor = cursorred;
 				}
 				else if (Root.CanvasCursor == 1)
@@ -718,7 +736,25 @@ namespace gInk
 
 				if (Root.CanvasCursor == 0)
 				{
-					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+					var size = Root.CursorSize;
+					switch (size)
+					{
+						case 0:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
+							break;
+						case 1:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
+							break;
+						case 2:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
+							break;
+						case 3:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
+							break;
+						case 4:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
+							break;
+					}
 					IC.Cursor = cursorred;
 				}
 				else if (Root.CanvasCursor == 1)

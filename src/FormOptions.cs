@@ -78,6 +78,8 @@ namespace gInk
 
 			comboCanvasCursor.SelectedIndex = Root.CanvasCursor;
 
+			tbCursorsize.Value = Root.CursorSize;
+			
 			tbSnapPath.Text = Root.SnapshotBasePath;
 			
 			lbNote.ForeColor = Color.Black;
@@ -196,6 +198,7 @@ namespace gInk
 			tabControl1.TabPages[2].Text = Root.Local.OptionsTabHotkeys;
 			this.lbLanguage.Text = Root.Local.OptionsGeneralLanguage;
 			this.lbCanvascursor.Text = Root.Local.OptionsGeneralCanvascursor;
+			this.lbCursorsize.Text = Root.Local.OptionsGeneralCursorsize;
 			this.lbSnapshotsavepath.Text = Root.Local.OptionsGeneralSnapshotsavepath;
 			this.cbWhiteIcon.Text = Root.Local.OptionsGeneralWhitetrayicon;
 			this.cbAllowDragging.Text = Root.Local.OptionsGeneralAllowdragging;
@@ -417,7 +420,12 @@ namespace gInk
 			Root.AllowDraggingToolbar = cbAllowDragging.Checked;
 		}
 
-		private void cbAllowHotkeyInPointer_CheckedChanged(object sender, EventArgs e)
+        private void tbCursorsize_ValueChanged(object sender, EventArgs e)
+        {
+			Root.CursorSize = tbCursorsize.Value;
+        }
+
+        private void cbAllowHotkeyInPointer_CheckedChanged(object sender, EventArgs e)
 		{
 			Root.AllowHotkeyInPointerMode = cbAllowHotkeyInPointer.Checked;
 		}

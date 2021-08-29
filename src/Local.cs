@@ -16,6 +16,7 @@ namespace gInk
 		//tablica nazw pisaków - maksymalnie 10
 		public string[] ButtonNamePen = new string[10];
 
+		
 		//tekst w przyciskach, menu, opcjach oraz powiadomieniach w języku angielskim
 		public string ButtonNamePenwidth = "Pen width";
 		public string ButtonNameErasor = "Eraser";
@@ -41,6 +42,7 @@ namespace gInk
 		public string OptionsGeneralCanvascursor = "Canvus cursor";
 		public string OptionsGeneralCanvascursorArrow = "Arrow";
 		public string OptionsGeneralCanvascursorPentip = "Pen tip";
+		public string OptionsGeneralCursorsize = "Cursor size";
 		public string OptionsGeneralSnapshotsavepath = "Snapshot save path";
 		public string OptionsGeneralWhitetrayicon = "Use white tray icon";
 		public string OptionsGeneralAllowdragging = "Allow dragging toolbar";

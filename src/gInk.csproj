@@ -219,6 +219,11 @@
     <None Include="dockback.png" />
     <None Include="cursorsnap.ico" />
     <None Include="i18n.png" />
+    <Content Include="cursorred0.ico" />
+    <Content Include="cursorred1.ico" />
+    <Content Include="cursorred2.ico" />
+    <Content Include="cursorred3.ico" />
+    <Content Include="cursorred4.ico" />
     <Content Include="icon_red.ico" />
     <None Include="icon_white.ico" />
   </ItemGroup>

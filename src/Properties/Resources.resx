@@ -199,4 +199,19 @@
   <data name="i18n" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\i18n.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="cursorred0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorred0.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorred1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorred1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorred2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorred2.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorred3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorred3.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorred4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorred4.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

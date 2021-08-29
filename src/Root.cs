@@ -66,6 +66,7 @@ namespace gInk
 		public bool WhiteTrayIcon;
 		public string SnapshotBasePath;
 		public int CanvasCursor = 0;
+		public int CursorSize = 3;
 		public bool AllowDraggingToolbar = true;
 		public bool AllowHotkeyInPointerMode = true;
 		public int gpButtonsLeft, gpButtonsTop;
@@ -726,6 +727,10 @@ namespace gInk
 							else if (sPara == "1")
 								CanvasCursor = 1;
 							break;
+						case "CURSOR_SIZE":
+							if (int.TryParse(sPara, out tempi))
+								CursorSize = tempi;
+							break;
 					}
 				}
 			}
@@ -936,6 +941,9 @@ namespace gInk
 							break;
 						case "CANVAS_CURSOR":
 							sPara = CanvasCursor.ToString();
+							break;
+						case "CURSOR_SIZE":
+							sPara = CursorSize.ToString();
 							break;
 					}
 				}
