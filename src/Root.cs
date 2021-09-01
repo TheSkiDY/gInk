@@ -72,8 +72,11 @@ namespace gInk
 		public int gpButtonsLeft, gpButtonsTop;
 
 		// opcje zaawansowane
+
 		public string CloseOnSnap = "blankonly";
 		public bool AlwaysHideToolbar = false;
+
+		//zmienna kontroluje, jaką część ekranu zajmują przyciski
 		public float ToolbarHeight = 0.06f;
 
 		// opcje skrótów klawiszowych
@@ -106,6 +109,7 @@ namespace gInk
 
 		public bool PanMode = false;
 		public bool InkVisible = true;
+
 
 		public Ink[] UndoStrokes;
 		//public Ink UponUndoStrokes;
@@ -230,9 +234,19 @@ namespace gInk
 
 			//Docked = false;
 
+			//konstruktory trzech najważniejszych klas odpowiadających za mechanizm rysowania
+
 			FormDisplay = new FormDisplay(this);
 			FormCollection = new FormCollection(this);
+
+			//ButtonHitter służy do trybu programu, w którym działa normalny kursor i można nim działać zwyczajnie na system
+			//podczas gdy nadal widoczne są rysunki
 			FormButtonHitter = new FormButtonHitter(this);
+
+			//sprawdzenie, czy któryś z pisaków jest aktywny
+
+			//gdy nie ma żadnego aktywnego w menu, zmienna CurrentPen jest ustawiana na wartość -2, która oznacza
+			//Pointer Mode (zwyczajna obsługa systemu kursorem). 
 			if (CurrentPen < 0)
 				CurrentPen = 0;
 			if (!PenEnabled[CurrentPen])
@@ -243,13 +257,20 @@ namespace gInk
 				if (CurrentPen == MaxPenCount)
 					CurrentPen = -2;
 			}
+
+			//wybieranie obecnego pisaka, metoda woła metodę o tej samej nazwie z klasy FormCollection
 			SelectPen(CurrentPen);
+
+			//funkcja do ukrywania i odkrywania rysunków z ekranu
 			SetInkVisible(true);
+
 			FormCollection.ButtonsEntering = 1;
 			FormDisplay.Show();
 			FormCollection.Show();
 			FormDisplay.DrawButtons(true);
 
+			//inicjalizacja tablicy Strokes'ów (pojedynczych rysunków bez puszczania myszki) służąca do przechowywania
+			//cofniętych rysunków do ich późniejszego odzyskania
 			if (UndoStrokes == null)
 			{
 				UndoStrokes = new Ink[8];
@@ -262,6 +283,9 @@ namespace gInk
 		}
 		public void StopInk()
 		{
+			//zamykanie trybu rysowania i chowanie przycisków 
+
+			//
 			FormCollection.Close();
 			FormDisplay.Close();
 			FormButtonHitter.Close();
@@ -271,11 +295,28 @@ namespace gInk
 			FormCollection = null;
 			FormDisplay = null;
 
+			//jeśli wykonany został screenshot w trakcie pracy z rysowaniem,
+			//to po zamknięciu trybu rysowania pokaże się "Balloon Snapshot" (powiadomienie w Win10) z informacją o zapisaniu
+			//screenshota w domyślnym(bądź zmienionym) folderze
 			if (UponBalloonSnap)
 			{
 				ShowBalloonSnapshot();
+
+				//ustawienie na false, aby przy kolejnych zamknięciach trybu pracy z rysowaniem nie wyświetlała się informacja
+				//o starym screenshocie
 				UponBalloonSnap = false;
 			}
+		}
+
+		private void UpdateDisplay(bool clearing)
+		{
+			FormDisplay.ClearCanvus();
+
+			if (!clearing)
+				FormDisplay.DrawStrokes();
+
+			FormDisplay.DrawButtons(true);
+			FormDisplay.UpdateFormDisplay(true);
 		}
 
 		public void ClearInk()
@@ -283,9 +324,7 @@ namespace gInk
 			//funkcja czyszcząca ekran ze wszystkich rysunków po kliknięciu na przycisk ze śmietnikiem
 
 			FormCollection.IC.Ink.DeleteStrokes();
-			FormDisplay.ClearCanvus();
-			FormDisplay.DrawButtons(true);
-			FormDisplay.UpdateFormDisplay(true);
+			UpdateDisplay(true);
 		}
 
 		public void ShowBalloonSnapshot()
@@ -294,56 +333,57 @@ namespace gInk
 		}
 
 		public void UndoInk()
-		{
-			if (UndoDepth <= 0)
-				return;
+        {
+            //UndoDepth kontroluje ile można wykonać cofnięć za pomocą przycisku bądź skrótku kl. CTRL + Z
+            //jeśli jest mniejsze lub równe 0, funkcja się oczywiście nie wykonuje
+            if (UndoDepth <= 0)
+                return;
 
-			UndoP--;
-			if (UndoP < 0)
-				UndoP = UndoStrokes.GetLength(0) - 1;
-			UndoDepth--;
-			RedoDepth++;
-			FormCollection.IC.Ink.DeleteStrokes();
-			if (UndoStrokes[UndoP].Strokes.Count > 0)
-				FormCollection.IC.Ink.AddStrokesAtRectangle(UndoStrokes[UndoP].Strokes, UndoStrokes[UndoP].Strokes.GetBoundingBox());
+            UndoP--;
+            if (UndoP < 0)
+                UndoP = UndoStrokes.GetLength(0) - 1;
 
-			FormDisplay.ClearCanvus();
-			FormDisplay.DrawStrokes();
-			FormDisplay.DrawButtons(true);
-			FormDisplay.UpdateFormDisplay(true);
-		}
+            UndoDepth--;
 
-		public void Pan(int x, int y)
+            //RedoDepth kontroluje ile można wykonać operacji (Redo), czyli przywrócenia cofniętego rysunku
+            RedoDepth++;
+
+            FormCollection.IC.Ink.DeleteStrokes();
+            if (UndoStrokes[UndoP].Strokes.Count > 0)
+                FormCollection.IC.Ink.AddStrokesAtRectangle(UndoStrokes[UndoP].Strokes, UndoStrokes[UndoP].Strokes.GetBoundingBox());
+
+            UpdateDisplay(false);
+        }
+
+
+        public void Pan(int x, int y)
 		{
 			//funkcja Pan służąca do przenoszenia rysunków za pomocą myszki po kliknięciu na przycisk z obrazkiem kursora
 			if (x == 0 && y == 0)
 				return;
 
+			//przenoszenie wszystkich rysunków
 			FormCollection.IC.Ink.Strokes.Move(x, y);
 
-			FormDisplay.ClearCanvus();
-			FormDisplay.DrawStrokes();
-			FormDisplay.DrawButtons(true);
-			FormDisplay.UpdateFormDisplay(true);
+			UpdateDisplay(false);
 		}
 
 		public void SetInkVisible(bool visible)
 		{
-			//funkcja do ukrywania i odkrywania rysunków z ekranu
 			InkVisible = visible;
+
+			//warunek kontrolujący wyświetlaną grafikę na przycisku od wyłączania widoczności rysunków
 			if (visible)
 				FormCollection.btInkVisible.Image = FormCollection.image_visible;
 			else
 				FormCollection.btInkVisible.Image = FormCollection.image_visible_not;
 
-			FormDisplay.ClearCanvus();
-			FormDisplay.DrawStrokes();
-			FormDisplay.DrawButtons(true);
-			FormDisplay.UpdateFormDisplay(true);
+			UpdateDisplay(false);
 		}
 
 		public void RedoInk()
 		{
+			//analogiczna metoda do UndoInk(), tylko dotycząca operacji Redo (przywracania cofniętych zmian)
 			if (RedoDepth <= 0)
 				return;
 
@@ -356,10 +396,7 @@ namespace gInk
 			if (UndoStrokes[UndoP].Strokes.Count > 0)
 				FormCollection.IC.Ink.AddStrokesAtRectangle(UndoStrokes[UndoP].Strokes, UndoStrokes[UndoP].Strokes.GetBoundingBox());
 
-			FormDisplay.ClearCanvus();
-			FormDisplay.DrawStrokes();
-			FormDisplay.DrawButtons(true);
-			FormDisplay.UpdateFormDisplay(true);
+			UpdateDisplay(false);
 		}
 
 		public void Dock()
@@ -373,6 +410,8 @@ namespace gInk
 
 			Docked = true;
 			gpPenWidthVisible = false;
+
+			//zmiana grafiki na przycisku od dockowania 
 			FormCollection.btDock.Image = FormCollection.image_dockback;
 			FormCollection.ButtonsEntering = -1;
 			UponButtonsUpdate |= 0x2;
@@ -380,6 +419,8 @@ namespace gInk
 
 		public void UnDock()
 		{
+			//analogiczna metoda do Dock() ale zajmująca się ponownym rozwijaniem menu z przyciskami
+			
 			if (FormDisplay == null || FormCollection == null)
 				return;
 
@@ -402,6 +443,7 @@ namespace gInk
 
 		public void UnPointer()
 		{
+			//analogiczna metoda do Pointer(), ale kończącą tryb obsługi systemu zwyczajnym kursorem
 			if (PointerMode == false)
 				return;
 
@@ -1013,6 +1055,8 @@ namespace gInk
 
 		public void UnsetHotkey()
 		{
+			//analogiczna metoda do RegisterHotkey()
+
 			int modifier = 0;
 			if (Hotkey_Global.Control) modifier |= 0x2;
 			if (Hotkey_Global.Alt) modifier |= 0x1;

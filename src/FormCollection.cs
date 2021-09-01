@@ -13,10 +13,14 @@ namespace gInk
 {
 	public partial class FormCollection : Form
 	{
+		
 		public Root Root;
 		public InkOverlay IC;
 
+		//przyciski odpowiadające aktywnym pisakom do wyboru
 		public Button[] btPen;
+
+		//zmienne i tablica bitmap służące do przechowywania grafik nanoszonych na przyciski w menu
 		public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
@@ -26,10 +30,18 @@ namespace gInk
 		public Bitmap image_eraser_act, image_eraser;
 		public Bitmap image_pan_act, image_pan;
 		public Bitmap image_visible_not, image_visible;
+
+		//zmienne kontrolujące podmianę kursora myszki (na czerwony przy rysowaniu, bądź na krzyżyk przy trybie zrzutu ekranu)
 		public System.Windows.Forms.Cursor cursorred, cursorsnap;
 		public System.Windows.Forms.Cursor cursortip;
 
 		public int ButtonsEntering = 0;  // -1 = exiting
+
+		public const double defaultButtonHeight = 0.88;
+		public const double defaultButtonWidth = 1.0;
+		public const double defaultButtonTop = 0.07;
+		public const double defaultGapBetweenButtons = 0.1;
+
 		public int gpButtonsLeft, gpButtonsTop, gpButtonsWidth, gpButtonsHeight; // the default location, fixed
 
 		public bool gpPenWidth_MouseOn = false;
@@ -53,43 +65,33 @@ namespace gInk
 			Root = root;
 			InitializeComponent();
 
+			//zmienne PrimaryLeft i PrimaryTop przechowują koordynaty lewego górnego rogu całego ekranu służącego do rysunku
+			//zazwyczaj gdy używamy jednego ekranu bez ekranów wirtualnych to obie zmienne mają oczekiwaną wartość 0
 			PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
 			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;
 
+			//ustawienie wysokości menu
 			gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
-			btClear.Height = (int)(gpButtons.Height * 0.88);
-			btClear.Width = btClear.Height;
-			btClear.Top = (int)(gpButtons.Height * 0.07);
-			btDock.Height = (int)(gpButtons.Height * 0.88);
-			btDock.Width = (int)(btDock.Height * 0.75);
-			btDock.Top = (int)(gpButtons.Height * 0.07);
-			btEraser.Height = (int)(gpButtons.Height * 0.88);
-			btEraser.Width = btEraser.Height;
-			btEraser.Top = (int)(gpButtons.Height * 0.07);
-			btInkVisible.Height = (int)(gpButtons.Height * 0.88);
-			btInkVisible.Width = btInkVisible.Height;
-			btInkVisible.Top = (int)(gpButtons.Height * 0.07);
-			btPan.Height = (int)(gpButtons.Height * 0.88);
-			btPan.Width = btPan.Height;
-			btPan.Top = (int)(gpButtons.Height * 0.07);
-			btPointer.Height = (int)(gpButtons.Height * 0.88);
-			btPointer.Width = btPointer.Height;
-			btPointer.Top = (int)(gpButtons.Height * 0.07);
-			btSnap.Height = (int)(gpButtons.Height * 0.88);
-			btSnap.Width = btSnap.Height;
-			btSnap.Top = (int)(gpButtons.Height * 0.07);
-			btStop.Height = (int)(gpButtons.Height * 0.88);
-			btStop.Width = btStop.Height;
-			btStop.Top = (int)(gpButtons.Height * 0.07);
-			btUndo.Height = (int)(gpButtons.Height * 0.88);
-			btUndo.Width = btUndo.Height;
-			btUndo.Top = (int)(gpButtons.Height * 0.07);
 
+			//przypisanie wartości wysokości, szerokości i pozycji wertykalnej przycisków
+			//autorska funkcja niwelująca powtarzalny kod
+			InitButtonPropertySetup(btClear);
+			InitButtonPropertySetup(btClear,defaultButtonHeight, 0.75,defaultButtonTop);
+			InitButtonPropertySetup(btEraser);
+			InitButtonPropertySetup(btInkVisible);
+			InitButtonPropertySetup(btPan);
+			InitButtonPropertySetup(btPointer);
+			InitButtonPropertySetup(btSnap);
+			InitButtonPropertySetup(btStop);
+			InitButtonPropertySetup(btUndo);
+
+			//inicjalizacja tablicy przycisków widocznych w zależności od aktywnych pisaków do wyboru
 			btPen = new Button[Root.MaxPenCount];
 
 			int cumulatedleft = (int)(btStop.Width * 1.2);
 			for (int b = 0; b < Root.MaxPenCount; b++)
 			{
+				//pętla inicjalizująca przyciski z pisakami i ustawiająca im odpowiednie parametry i własności
 				btPen[b] = new Button();
 				btPen[b].Width = (int)(gpButtons.Height * 0.88);
 				btPen[b].Height = (int)(gpButtons.Height * 0.88);
@@ -108,106 +110,36 @@ namespace gInk
 
 				this.toolTip.SetToolTip(this.btPen[b], Root.Local.ButtonNamePen[b] + " (" + Root.Hotkey_Pens[b].ToString() + ")");
 
+				//metody służące do obsługi zmiany pozycji toolbara za pomocą myszki (w obecnej wersji gInk funkcja eksperymentalna)
 				btPen[b].MouseDown += gpButtons_MouseDown;
 				btPen[b].MouseMove += gpButtons_MouseMove;
 				btPen[b].MouseUp += gpButtons_MouseUp;
 
 				gpButtons.Controls.Add(btPen[b]);
 
-				if (Root.PenEnabled[b])
-				{
-					btPen[b].Visible = true;
-					btPen[b].Left = cumulatedleft;
-					cumulatedleft += (int)(btPen[b].Width * 1.1);
-				}
-				else
-				{
-					btPen[b].Visible = false;
-				}
+				//pokazywanie tylko takich przycisków z pisakami, które są zaznaczone jako aktywne w opcjach
+				InitButtonPos(btPen[b], ref cumulatedleft, Root.PenEnabled[b]);
 			}
+
+			//dłuższa przerwa między przyciskami
 			cumulatedleft += (int)(btStop.Width * 0.8);
-			if (Root.EraserEnabled)
-			{
-				btEraser.Visible = true;
-				btEraser.Left = cumulatedleft;
-				cumulatedleft += (int)(btEraser.Width * 1.1);
-			}
-			else
-			{
-				btEraser.Visible = false;
-			}
-			if (Root.PanEnabled)
-			{
-				btPan.Visible = true;
-				btPan.Left = cumulatedleft;
-				cumulatedleft += (int)(btPan.Width * 1.1);
-			}
-			else
-			{
-				btPan.Visible = false;
-			}
-			if (Root.PointerEnabled)
-			{
-				btPointer.Visible = true;
-				btPointer.Left = cumulatedleft;
-				cumulatedleft += (int)(btPointer.Width * 1.1);
-			}
-			else
-			{
-				btPointer.Visible = false;
-			}
+
+			InitButtonPos(btEraser, ref cumulatedleft, Root.EraserEnabled);
+			InitButtonPos(btPan, ref cumulatedleft, Root.PanEnabled);
+			InitButtonPos(btPointer, ref cumulatedleft, Root.PointerEnabled);
+
+			//dłuższa przerwa między przyciskami
 			cumulatedleft += (int)(btStop.Width * 0.8);
-			if (Root.PenWidthEnabled)
-			{
-				btPenWidth.Visible = true;
-				btPenWidth.Left = cumulatedleft;
-				cumulatedleft += (int)(btPenWidth.Width * 1.1);
-			}
-			else
-			{
-				btPenWidth.Visible = false;
-			}
-			if (Root.InkVisibleEnabled)
-			{
-				btInkVisible.Visible = true;
-				btInkVisible.Left = cumulatedleft;
-				cumulatedleft += (int)(btInkVisible.Width * 1.1);
-			}
-			else
-			{
-				btInkVisible.Visible = false;
-			}
-			if (Root.SnapEnabled)
-			{
-				btSnap.Visible = true;
-				btSnap.Left = cumulatedleft;
-				cumulatedleft += (int)(btSnap.Width * 1.1);
-			}
-			else
-			{
-				btSnap.Visible = false;
-			}
-			if (Root.UndoEnabled)
-			{
-				btUndo.Visible = true;
-				btUndo.Left = cumulatedleft;
-				cumulatedleft += (int)(btUndo.Width * 1.1);
-			}
-			else
-			{
-				btUndo.Visible = false;
-			}
-			if (Root.ClearEnabled)
-			{
-				btClear.Visible = true;
-				btClear.Left = cumulatedleft;
-				cumulatedleft += (int)(btClear.Width * 1.1);
-			}
-			else
-			{
-				btClear.Visible = false;
-			}
+
+			InitButtonPos(btPenWidth, ref cumulatedleft, Root.PenWidthEnabled);
+			InitButtonPos(btInkVisible, ref cumulatedleft, Root.InkVisibleEnabled);
+			InitButtonPos(btSnap, ref cumulatedleft, Root.SnapEnabled);
+			InitButtonPos(btUndo, ref cumulatedleft, Root.UndoEnabled);
+			InitButtonPos(btClear, ref cumulatedleft, Root.ClearEnabled);
+
+			//dłuższa przerwa między przyciskami
 			cumulatedleft += (int)(btStop.Width * 0.8);
+
 			btStop.Left = cumulatedleft;
 			gpButtons.Width = btStop.Right + (int)(btStop.Width * 0.5);
 			
@@ -225,6 +157,8 @@ namespace gInk
 			//this.Height = targetbottom - this.Top;
 			this.Width = SystemInformation.VirtualScreen.Width;
 			this.Height = SystemInformation.VirtualScreen.Height - 2;
+
+			//unikanie drgania obrazu poprzez podwójne buforowanie
 			this.DoubleBuffered = true;
 
 			gpButtonsWidth = gpButtons.Width;
@@ -277,104 +211,44 @@ namespace gInk
 			IC.DefaultDrawingAttributes.Transparency = 30;
 			IC.DefaultDrawingAttributes.AntiAliased = true;
 
-			cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+			//cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
 			//IC.Cursor = cursorred;
 			IC.Enabled = true;
 
 			image_exit = new Bitmap(btStop.Width, btStop.Height);
 			Graphics g = Graphics.FromImage(image_exit);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.exit, 0, 0, btStop.Width, btStop.Height);
-			btStop.Image = image_exit;
-			image_clear = new Bitmap(btClear.Width, btClear.Height);
-			g = Graphics.FromImage(image_clear);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.garbage, 0, 0, btClear.Width, btClear.Height);
-			btClear.Image = image_clear;
-			image_undo = new Bitmap(btUndo.Width, btUndo.Height);
-			g = Graphics.FromImage(image_undo);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.undo, 0, 0, btUndo.Width, btUndo.Height);
-			btUndo.Image = image_undo;
-			image_eraser_act = new Bitmap(btEraser.Width, btEraser.Height);
-			g = Graphics.FromImage(image_eraser_act);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.eraser_act, 0, 0, btEraser.Width, btEraser.Height);
-			image_eraser = new Bitmap(btEraser.Width, btEraser.Height);
-			g = Graphics.FromImage(image_eraser);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.eraser, 0, 0, btEraser.Width, btEraser.Height);
-			btEraser.Image = image_eraser;
 
-			image_pan_act = new Bitmap(btPan.Width, btPan.Height);
-			g = Graphics.FromImage(image_pan_act);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pan_act, 0, 0, btPan.Width, btPan.Height);
-			image_pan = new Bitmap(btPan.Width, btPan.Height);
-			g = Graphics.FromImage(image_pan);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pan, 0, 0, btPan.Width, btPan.Height);
-			btPan.Image = image_pan;
+			InitButtonBitmap(btStop,ref image_exit, gInk.Properties.Resources.exit,  g, true);
+			InitButtonBitmap(btClear, ref image_clear,gInk.Properties.Resources.garbage ,g, true);
+			InitButtonBitmap(btUndo, ref image_undo, gInk.Properties.Resources.undo, g, true);
 
-			image_visible_not = new Bitmap(btInkVisible.Width, btInkVisible.Height);
-			g = Graphics.FromImage(image_visible_not);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.visible_not, 0, 0, btInkVisible.Width, btInkVisible.Height);
-			image_visible = new Bitmap(btInkVisible.Width, btInkVisible.Height);
-			g = Graphics.FromImage(image_visible);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.visible, 0, 0, btInkVisible.Width, btInkVisible.Height);
-			btInkVisible.Image = image_visible;
+			InitButtonBitmap(btEraser, ref image_eraser_act,gInk.Properties.Resources.eraser_act, g, false);
+			InitButtonBitmap(btEraser, ref image_eraser,gInk.Properties.Resources.eraser, g, true);
 
-			image_snap = new Bitmap(btSnap.Width, btSnap.Height);
-			g = Graphics.FromImage(image_snap);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.snap, 0, 0, btSnap.Width, btSnap.Height);
-			btSnap.Image = image_snap;
-			image_penwidth = new Bitmap(btPenWidth.Width, btPenWidth.Height);
-			g = Graphics.FromImage(image_penwidth);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0, btPenWidth.Width, btPenWidth.Height);
-			btPenWidth.Image = image_penwidth;
-			image_dock = new Bitmap(btDock.Width, btDock.Height);
-			g = Graphics.FromImage(image_dock);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.dock, 0, 0, btDock.Width, btDock.Height);
-			image_dockback = new Bitmap(btDock.Width, btDock.Height);
-			g = Graphics.FromImage(image_dockback);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.dockback, 0, 0, btDock.Width, btDock.Height);
+			InitButtonBitmap(btPan, ref image_pan_act,gInk.Properties.Resources.pan_act ,g, false);
+			InitButtonBitmap(btPan, ref image_pan, gInk.Properties.Resources.pan,g, true);
+
+			InitButtonBitmap(btInkVisible, ref image_visible_not, gInk.Properties.Resources.visible_not,g, false);
+			InitButtonBitmap(btInkVisible, ref image_visible,gInk.Properties.Resources.visible, g, true);
+
+			InitButtonBitmap(btSnap, ref image_snap,gInk.Properties.Resources.snap, g, true);
+			InitButtonBitmap(btPenWidth, ref image_penwidth, gInk.Properties.Resources.penwidth, g, true);
+
+			InitButtonBitmap(btDock, ref image_dock, gInk.Properties.Resources.dock, g, false);
+			InitButtonBitmap(btDock, ref image_dockback, gInk.Properties.Resources.dockback, g, false);
+			
 			if (Root.Docked)
 				btDock.Image = image_dockback;
 			else
 				btDock.Image = image_dock;
 
-			image_pencil = new Bitmap(btPen[2].Width, btPen[2].Height);
-			g = Graphics.FromImage(image_pencil);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
-			image_highlighter = new Bitmap(btPen[2].Width, btPen[2].Height);
-			g = Graphics.FromImage(image_highlighter);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.highlighter, 0, 0, btPen[2].Width, btPen[2].Height);
-			image_pencil_act = new Bitmap(btPen[2].Width, btPen[2].Height);
-			g = Graphics.FromImage(image_pencil_act);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pencil_act, 0, 0, btPen[2].Width, btPen[2].Height);
-			image_highlighter_act = new Bitmap(btPen[2].Width, btPen[2].Height);
-			g = Graphics.FromImage(image_highlighter_act);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.highlighter_act, 0, 0, btPen[2].Width, btPen[2].Height);
-
-			image_pointer = new Bitmap(btPointer.Width, btPointer.Height);
-			g = Graphics.FromImage(image_pointer);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pointer, 0, 0, btPointer.Width, btPointer.Height);
-			image_pointer_act = new Bitmap(btPointer.Width, btPointer.Height);
-			g = Graphics.FromImage(image_pointer_act);
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pointer_act, 0, 0, btPointer.Width, btPointer.Height);
-
+			InitButtonBitmap(btPen[2], ref image_pencil, gInk.Properties.Resources.pencil, g, false);
+			InitButtonBitmap(btPen[2], ref image_highlighter, gInk.Properties.Resources.highlighter, g, false);
+			InitButtonBitmap(btPen[2], ref image_pencil_act, gInk.Properties.Resources.pencil_act, g, false);
+			InitButtonBitmap(btPen[2], ref image_highlighter_act, gInk.Properties.Resources.highlighter_act, g, false);
+			InitButtonBitmap(btPointer, ref image_pointer, gInk.Properties.Resources.pointer, g, false);
+			InitButtonBitmap(btPointer, ref image_pointer_act, gInk.Properties.Resources.pointer_act, g, false);
+			
 			image_pen = new Bitmap[Root.MaxPenCount];
 			image_pen_act = new Bitmap[Root.MaxPenCount];
 			for (int b = 0; b < Root.MaxPenCount; b++)
@@ -411,6 +285,37 @@ namespace gInk
 			this.toolTip.SetToolTip(this.btUndo, Root.Local.ButtonNameUndo + " (" + Root.Hotkey_Undo.ToString() + ")");
 			this.toolTip.SetToolTip(this.btClear, Root.Local.ButtonNameClear + " (" + Root.Hotkey_Clear.ToString() + ")");
 			this.toolTip.SetToolTip(this.btStop, Root.Local.ButtonNameExit + " (ESC)");
+		}
+
+		private void InitButtonPropertySetup(Button button, double height=defaultButtonHeight, double width=defaultButtonWidth, double top=defaultButtonTop)
+        {
+			button.Height = (int)(gpButtons.Height * height);
+			button.Width = (int)(button.Height * width);
+			button.Top = (int)(gpButtons.Height * top);
+		}
+
+		private void InitButtonPos(Button button, ref int cumulatedLeft, bool isEnabled, double gap = defaultGapBetweenButtons)
+        {
+			if (isEnabled)
+			{
+				button.Visible = true;
+				button.Left = cumulatedLeft;
+				cumulatedLeft += (int)(button.Width * (1.0 + defaultGapBetweenButtons));
+			}
+			else
+			{
+				button.Visible = false;
+			}
+		}
+
+		private void InitButtonBitmap(Button button, ref Bitmap bitmap, Bitmap resource,Graphics g, bool overwriteImage)
+        {
+			bitmap = new Bitmap(button.Width, button.Height);
+			g = Graphics.FromImage(bitmap);
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+			g.DrawImage(resource, 0, 0, button.Width, button.Height);
+			if(overwriteImage)
+				button.Image = bitmap;
 		}
 
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
