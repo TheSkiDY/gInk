@@ -134,6 +134,8 @@ namespace gInk
 		public int CurrentPen = 1; 
 		public int LastPen = 1;
 		public int GlobalPenWidth = 80;
+
+		//widoczność panelu do wybierania grubości pisaka
 		public bool gpPenWidthVisible = false;
 
 		//
@@ -438,6 +440,8 @@ namespace gInk
 
 			PointerMode = true;
 			FormCollection.ToThrough();
+
+			//FormButtonHitter odpowiada wyłącznie za interakcję z przyciskami
 			FormButtonHitter.Show();
 		}
 

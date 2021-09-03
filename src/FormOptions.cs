@@ -413,6 +413,10 @@ namespace gInk
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Root.CanvasCursor = comboCanvasCursor.SelectedIndex;
+			if (Root.CanvasCursor == 1)
+				tbCursorsize.Enabled = false;
+			else
+				tbCursorsize.Enabled = true;
 		}
 
 		private void cbAllowDragging_CheckedChanged(object sender, EventArgs e)

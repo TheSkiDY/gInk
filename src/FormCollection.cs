@@ -196,11 +196,20 @@ namespace gInk
 			pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
 			gpPenWidth.Controls.Add(pboxPenWidthIndicator);
 
+			//informacje z https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.5/ms552322(v=vs.90)
+
 			IC = new InkOverlay(this.Handle);
 			IC.CollectionMode = CollectionMode.InkOnly;
+
+			//AutoRedraw kontroluje, czy po zminimalizowaniu i późniejszym zmaksymalizowaniu okna, rysunki zostają narysowane ponownie
 			IC.AutoRedraw = false;
+
+			//musi być oznaczone jako false, aby rysunki były renderowane w czasie rzeczywistym przy AutoRedraw=false
 			IC.DynamicRendering = false;
+
+			//ustawienie trybu usuwania rysunków jako usuwanie całego stroke'a, a nie pojedynczego punktu (StrokeErase zamiast PointErase)
 			IC.EraserMode = InkOverlayEraserMode.StrokeErase;
+
 			IC.CursorInRange += IC_CursorInRange;
 			IC.MouseDown += IC_MouseDown;
 			IC.MouseMove += IC_MouseMove;
@@ -218,6 +227,8 @@ namespace gInk
 			image_exit = new Bitmap(btStop.Width, btStop.Height);
 			Graphics g = Graphics.FromImage(image_exit);
 
+
+			//załadowanie obrazków dla przycisków, autorskie metody dla zniwelowania powtarzalnego kodu
 			InitButtonBitmap(btStop,ref image_exit, gInk.Properties.Resources.exit,  g, true);
 			InitButtonBitmap(btClear, ref image_clear,gInk.Properties.Resources.garbage ,g, true);
 			InitButtonBitmap(btUndo, ref image_undo, gInk.Properties.Resources.undo, g, true);
@@ -237,6 +248,7 @@ namespace gInk
 			InitButtonBitmap(btDock, ref image_dock, gInk.Properties.Resources.dock, g, false);
 			InitButtonBitmap(btDock, ref image_dockback, gInk.Properties.Resources.dockback, g, false);
 			
+			//sprawdzenie, czy toolbar jest schowany i odpowiednie dostosowanie obrazku na przycisku "Dock"
 			if (Root.Docked)
 				btDock.Image = image_dockback;
 			else
@@ -249,6 +261,7 @@ namespace gInk
 			InitButtonBitmap(btPointer, ref image_pointer, gInk.Properties.Resources.pointer, g, false);
 			InitButtonBitmap(btPointer, ref image_pointer_act, gInk.Properties.Resources.pointer_act, g, false);
 			
+			//inicjalizacja bitmap dla przycisków pisaków i załadowanie obrazków dla aktywnych pisaków
 			image_pen = new Bitmap[Root.MaxPenCount];
 			image_pen_act = new Bitmap[Root.MaxPenCount];
 			for (int b = 0; b < Root.MaxPenCount; b++)
@@ -275,6 +288,7 @@ namespace gInk
 			ToTransparent();
 			ToTopMost();
 
+			//ustawienie tooltipów dla przycisków
 			this.toolTip.SetToolTip(this.btDock, Root.Local.ButtonNameDock);
 			this.toolTip.SetToolTip(this.btPenWidth, Root.Local.ButtonNamePenwidth);
 			this.toolTip.SetToolTip(this.btEraser, Root.Local.ButtonNameErasor + " (" + Root.Hotkey_Eraser.ToString() + ")");
@@ -320,11 +334,14 @@ namespace gInk
 
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
+			//przy zakończeniu jednego rysunku uruchamia się procedura obsługi cofania (undo)
 			SaveUndoStrokes();
 		}
 
 		private void SaveUndoStrokes()
 		{
+			//gdy dorysowany jest nowy rysunek, Redo Depth zostaje ustawiony na 0.
+			//Nie ma możliwości operacji Redo po dodaniu nowego rysunku
 			Root.RedoDepth = 0;
 			if (Root.UndoDepth < Root.UndoStrokes.GetLength(0) - 1)
 				Root.UndoDepth++;
@@ -471,6 +488,8 @@ namespace gInk
 
 		public void ToTransparent()
 		{
+			//ustawienie całego Forma jako przezroczystego
+
 			UInt32 dwExStyle = GetWindowLong(this.Handle, -20);
 			SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
 			SetLayeredWindowAttributes(this.Handle, 0x00FFFFFF, 1, 0x2);
@@ -478,6 +497,8 @@ namespace gInk
 
 		public void ToTopMost()
 		{
+			//ustawienie FormCollection jako Forma znajdującego się najwyżej (przykrywa wszystkie inne aktywnego okna w systemie)
+
 			SetWindowPos(this.Handle, (IntPtr)(-1), 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0020);
 		}
 
@@ -539,6 +560,7 @@ namespace gInk
 			// -3=pan, -2=pointer, -1=erasor, 0+=pens
 			if (pen == -3)
 			{
+				//uruchomienie Pan Mode, czyli przenoszenie całości rysunków 
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
 				btEraser.Image = image_eraser;
@@ -560,6 +582,8 @@ namespace gInk
 			}
 			else if (pen == -2)
 			{
+				//uruchomienie Pointer Mode - działanie kursorem na resztę systemu
+
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
 				btEraser.Image = image_eraser;
@@ -571,6 +595,7 @@ namespace gInk
 			}
 			else if (pen == -1)
 			{
+				//uruchomienie trybu gumki, usuwanie konkretnych rysunków
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
 					this.Cursor = System.Windows.Forms.Cursors.Default;
 
@@ -585,6 +610,7 @@ namespace gInk
 
 				if (Root.CanvasCursor == 0)
 				{
+					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
 					var size = Root.CursorSize;
 					switch(size)
                     {
@@ -607,6 +633,7 @@ namespace gInk
 					IC.Cursor = cursorred;
 				}
 				else if (Root.CanvasCursor == 1)
+					//metoda zastępująca kursor kropką o kolorze i średnicy odpowiadającym kolorze aktywnego pisaka i jego grubości
 					SetPenTipCursor();
 
 				try
@@ -621,14 +648,20 @@ namespace gInk
 			}
 			else if (pen >= 0)
 			{
+				//ustawienie pisaka
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
 					this.Cursor = System.Windows.Forms.Cursors.Default;
 
 				IC.DefaultDrawingAttributes = Root.PenAttr[pen].Clone();
+
+				//wymuszanie konkretnej grubości pisaka w zależności od grubości ustawionej w panelu
 				if (Root.PenWidthEnabled)
 				{
 					IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
 				}
+
+				//ustawienie obrazków na przyciskach od nieaktywnych trybów na ich "czarną" wersję
+				//tylko aktywny pisak (którego indeks jest przechowywany w zmiennej pen) dostaje obrazek oznaczający aktywny (żółty)
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
 				btPen[pen].Image = image_pen_act[pen];
@@ -641,6 +674,7 @@ namespace gInk
 
 				if (Root.CanvasCursor == 0)
 				{
+					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
 					var size = Root.CursorSize;
 					switch (size)
 					{
@@ -676,6 +710,8 @@ namespace gInk
 				}
 			}
 			Root.CurrentPen = pen;
+
+			//zamknięcie panelu z doborem grubości pisaka po kliknięciu innego przycisku
 			if (Root.gpPenWidthVisible)
 			{
 				Root.gpPenWidthVisible = false;
@@ -690,7 +726,10 @@ namespace gInk
 
 		public void RetreatAndExit()
 		{
+			//metoda wywoływana przy końcu działania i zamykaniu FormCollection
+			
 			ToThrough();
+
 			Root.ClearInk();
 			SaveUndoStrokes();
 			Root.SaveOptions("config.ini");
@@ -706,6 +745,8 @@ namespace gInk
 
 		public void btDock_Click(object sender, EventArgs e)
 		{
+			//metoda wywołująca się po kliknięciu na przycisk od dockowania, najbardziej wychylonego w lewo
+
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -725,18 +766,23 @@ namespace gInk
 
 		public void btPointer_Click(object sender, EventArgs e)
 		{
+			//metoda wywołująca się przy kliknięciu przycisku z kursorem (Pointer Mode)
+
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
 				return;
 			}
 
+			//inne tryby działania z aplikacją, jak Pointer Mode lub tryb wymazywania są traktowane jako pisaki o indeksach mniejszych niż 0
+			//tryby te są uruchamiane wewnątrz metody SelectPen
 			SelectPen(-2);
 		}
 
 
 		private void btPenWidth_Click(object sender, EventArgs e)
 		{
+			//metoda wywołująca się przy kliknięciu przycisku od ustawienia grubości pisaka (domyślnie jest on ukryty i do ujawnienia w opcjach)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -755,6 +801,7 @@ namespace gInk
 
 		public void btSnap_Click(object sender, EventArgs e)
 		{
+			//metoda przy kliknięciu przycisku z aparatem (tryb tworzenie zrzutu ekranu)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -764,7 +811,26 @@ namespace gInk
 			if (Root.Snapping > 0)
 				return;
 
-			cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap.Handle);
+			//zmiana kursora na krzyżyk występujący podczas trybu tworzenia screenshota
+			var size = Root.CursorSize;
+			switch (size)
+			{
+				case 0:
+					cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap0.Handle);
+					break;
+				case 1:
+					cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap1.Handle);
+					break;
+				case 2:
+					cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap2.Handle);
+					break;
+				case 3:
+					cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap3.Handle);
+					break;
+				case 4:
+					cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap4.Handle);
+					break;
+			}
 			this.Cursor = cursorsnap;
 
 			Root.gpPenWidthVisible = false;
@@ -788,6 +854,7 @@ namespace gInk
 
 		public void ExitSnapping()
 		{
+			//wyjście z trybu tworzenia screenshota
 			try
 			{
 				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
@@ -808,6 +875,7 @@ namespace gInk
 
 		public void btStop_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana po kliknięciu przycisku "X", zamykająca aplikacje
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -896,6 +964,8 @@ namespace gInk
 
 		private void SetPenTipCursor()
 		{
+			//ustawienie kursora jako kropki w kolorze i grubości aktywnego pisaka
+
 			Bitmap bitmaptip = (Bitmap)(gInk.Properties.Resources._null).Clone();
 			Graphics g = Graphics.FromImage(bitmaptip);
 			DrawingAttributes dda = IC.DefaultDrawingAttributes;
@@ -1306,6 +1376,7 @@ namespace gInk
 
 		private void btInkVisible_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk z okiem (ukrywanie/odkrywanie rysunków)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -1317,6 +1388,7 @@ namespace gInk
 
 		public void btClear_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk ze śmietnikiem (czyszczenie całego ekranu)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -1329,6 +1401,7 @@ namespace gInk
 
 		private void btUndo_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk z zakręconą strzałką (Tryb cofania)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -1343,6 +1416,8 @@ namespace gInk
 
 		public void btColor_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk z pisakiem
+			//ta sama metoda obsługuje wszystkie przyciski i rzutowanie "sender" na klasę Button pozwala na rozróżnienie pisaków
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -1358,6 +1433,7 @@ namespace gInk
 
 		public void btEraser_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk z gumką (Tryb usuwania rysunków)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;
@@ -1370,6 +1446,7 @@ namespace gInk
 
 		private void btPan_Click(object sender, EventArgs e)
 		{
+			//metoda wywoływana przy kliknięciu na przycisk z celownikiem (włączenie trybu przenoszenia rysunków)
 			if (ToolbarMoved)
 			{
 				ToolbarMoved = false;

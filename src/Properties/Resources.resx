@@ -214,4 +214,19 @@
   <data name="cursorred4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\cursorred4.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="cursorsnap0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorsnap0.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorsnap1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorsnap1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorsnap2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorsnap2.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorsnap3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorsnap3.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cursorsnap4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\cursorsnap4.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

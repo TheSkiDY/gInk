@@ -224,6 +224,11 @@
     <Content Include="cursorred2.ico" />
     <Content Include="cursorred3.ico" />
     <Content Include="cursorred4.ico" />
+    <None Include="cursorsnap0.ico" />
+    <None Include="cursorsnap1.ico" />
+    <None Include="cursorsnap2.ico" />
+    <None Include="cursorsnap3.ico" />
+    <None Include="cursorsnap4.ico" />
     <Content Include="icon_red.ico" />
     <None Include="icon_white.ico" />
   </ItemGroup>
