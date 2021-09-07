@@ -31,6 +31,9 @@ namespace gInk
 		public Bitmap image_pan_act, image_pan;
 		public Bitmap image_visible_not, image_visible;
 
+		public Bitmap image_line, image_line_act;
+		public Bitmap image_rect, image_rect_act;
+
 		//zmienne kontrolujące podmianę kursora myszki (na czerwony przy rysowaniu, bądź na krzyżyk przy trybie zrzutu ekranu)
 		public System.Windows.Forms.Cursor cursorred, cursorsnap;
 		public System.Windows.Forms.Cursor cursortip;
@@ -85,6 +88,9 @@ namespace gInk
 			InitButtonPropertySetup(btStop);
 			InitButtonPropertySetup(btUndo);
 
+			InitButtonPropertySetup(btLine);
+			InitButtonPropertySetup(btRect);
+
 			//inicjalizacja tablicy przycisków widocznych w zależności od aktywnych pisaków do wyboru
 			btPen = new Button[Root.MaxPenCount];
 
@@ -123,6 +129,9 @@ namespace gInk
 
 			//dłuższa przerwa między przyciskami
 			cumulatedleft += (int)(btStop.Width * 0.8);
+
+			InitButtonPos(btLine, ref cumulatedleft, Root.LineEnabled);
+			InitButtonPos(btRect, ref cumulatedleft, Root.RectEnabled);
 
 			InitButtonPos(btEraser, ref cumulatedleft, Root.EraserEnabled);
 			InitButtonPos(btPan, ref cumulatedleft, Root.PanEnabled);
@@ -247,6 +256,11 @@ namespace gInk
 
 			InitButtonBitmap(btDock, ref image_dock, gInk.Properties.Resources.dock, g, false);
 			InitButtonBitmap(btDock, ref image_dockback, gInk.Properties.Resources.dockback, g, false);
+
+			InitButtonBitmap(btLine, ref image_line_act, gInk.Properties.Resources.lines_act, g, false);
+			InitButtonBitmap(btLine, ref image_line, gInk.Properties.Resources.lines, g, true);
+			InitButtonBitmap(btRect, ref image_rect_act, gInk.Properties.Resources.rect_act, g, false);
+			InitButtonBitmap(btRect, ref image_rect, gInk.Properties.Resources.rect, g, true);
 			
 			//sprawdzenie, czy toolbar jest schowany i odpowiednie dostosowanie obrazku na przycisku "Dock"
 			if (Root.Docked)
@@ -299,6 +313,9 @@ namespace gInk
 			this.toolTip.SetToolTip(this.btUndo, Root.Local.ButtonNameUndo + " (" + Root.Hotkey_Undo.ToString() + ")");
 			this.toolTip.SetToolTip(this.btClear, Root.Local.ButtonNameClear + " (" + Root.Hotkey_Clear.ToString() + ")");
 			this.toolTip.SetToolTip(this.btStop, Root.Local.ButtonNameExit + " (ESC)");
+
+			this.toolTip.SetToolTip(this.btLine, "Line - test");
+			this.toolTip.SetToolTip(this.btRect, "Rect - test");
 		}
 
 		private void InitButtonPropertySetup(Button button, double height=defaultButtonHeight, double width=defaultButtonWidth, double top=defaultButtonTop)
@@ -558,6 +575,96 @@ namespace gInk
 		public void SelectPen(int pen)
 		{
 			// -3=pan, -2=pointer, -1=erasor, 0+=pens
+			if(pen == -5)
+            {
+				if (this.Cursor != System.Windows.Forms.Cursors.Default)
+					this.Cursor = System.Windows.Forms.Cursors.Default;
+
+				for (int b = 0; b < Root.MaxPenCount; b++)
+					btPen[b].Image = image_pen[b];
+				btLine.Image = image_line;
+				btRect.Image = image_rect_act;
+				btEraser.Image = image_eraser;
+				btPointer.Image = image_pointer;
+				btPan.Image = image_pan;
+
+				//RectMode()
+
+				Root.LineMode = false;
+				Root.RectMode = true;
+				Root.PanMode = false;
+
+				if (Root.CanvasCursor == 0)
+				{
+					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
+					var size = Root.CursorSize;
+					switch (size)
+					{
+						case 0:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
+							break;
+						case 1:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
+							break;
+						case 2:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
+							break;
+						case 3:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
+							break;
+						case 4:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
+							break;
+					}
+					IC.Cursor = cursorred;
+				}
+			}
+
+			if(pen == -4)
+            {
+				if (this.Cursor != System.Windows.Forms.Cursors.Default)
+					this.Cursor = System.Windows.Forms.Cursors.Default;
+
+				for (int b = 0; b < Root.MaxPenCount; b++)
+					btPen[b].Image = image_pen[b];
+				btLine.Image = image_line_act;
+				btRect.Image = image_rect;
+				btEraser.Image = image_eraser;
+				btPointer.Image = image_pointer;
+				btPan.Image = image_pan;
+
+				//LineMode()
+
+				Root.LineMode = true;
+				Root.RectMode = false;
+				Root.PanMode = false;
+
+				if (Root.CanvasCursor == 0)
+				{
+					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
+					var size = Root.CursorSize;
+					switch (size)
+					{
+						case 0:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
+							break;
+						case 1:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
+							break;
+						case 2:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
+							break;
+						case 3:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
+							break;
+						case 4:
+							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
+							break;
+					}
+					IC.Cursor = cursorred;
+				}
+			}
+
 			if (pen == -3)
 			{
 				//uruchomienie Pan Mode, czyli przenoszenie całości rysunków 
@@ -566,9 +673,13 @@ namespace gInk
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan_act;
+				btLine.Image = image_line;
+				btRect.Image = image_rect;
 				EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = true;
+				Root.LineMode = false;
+				Root.RectMode = false;
 
 				try
 				{
@@ -589,9 +700,13 @@ namespace gInk
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer_act;
 				btPan.Image = image_pan;
+				btLine.Image = image_line;
+				btRect.Image = image_rect;
 				EnterEraserMode(false);
 				Root.Pointer();
 				Root.PanMode = false;
+				Root.LineMode = false;
+				Root.RectMode = false;
 			}
 			else if (pen == -1)
 			{
@@ -604,9 +719,13 @@ namespace gInk
 				btEraser.Image = image_eraser_act;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan;
+				btLine.Image = image_line;
+				btRect.Image = image_rect;
 				EnterEraserMode(true);
 				Root.UnPointer();
 				Root.PanMode = false;
+				Root.LineMode = false;
+				Root.RectMode = false;
 
 				if (Root.CanvasCursor == 0)
 				{
@@ -668,9 +787,13 @@ namespace gInk
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan;
+				btLine.Image = image_line;
+				btRect.Image = image_rect;
 				EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = false;
+				Root.LineMode = false; //!!!!!
+				Root.RectMode = false;
 
 				if (Root.CanvasCursor == 0)
 				{
@@ -970,29 +1093,43 @@ namespace gInk
 			Graphics g = Graphics.FromImage(bitmaptip);
 			DrawingAttributes dda = IC.DefaultDrawingAttributes;
 			Brush cbrush;
-			Point widt;
+			Point pt;
+
+			//jeśli program nie jest w trybie gumki, dobiera kolor pędzla (SolidBrush) w oparciu o aktywny pisak, którego
+			//atrybuty są przechowywane w IC.DefaultDrawingAttributes
 			if (!Root.EraserMode)
 			{
 				cbrush = new SolidBrush(IC.DefaultDrawingAttributes.Color);
 				//Brush cbrush = new SolidBrush(Color.FromArgb(255 - dda.Transparency, dda.Color.R, dda.Color.G, dda.Color.B));
-				widt = new Point((int)IC.DefaultDrawingAttributes.Width, 0);
+				pt = new Point((int)IC.DefaultDrawingAttributes.Width, 0);
 			}
 			else
 			{
 				cbrush = new SolidBrush(Color.Black);
-				widt = new Point(60, 0);
+				pt = new Point(60, 0);
 			}
-			IC.Renderer.InkSpaceToPixel(IC.Handle, ref widt);
+			IC.Renderer.InkSpaceToPixel(IC.Handle, ref pt);
 
+			//funkcja biorąca uchwyt do całego ekranu (bo IntPtr.Zero)
 			IntPtr screenDc = GetDC(IntPtr.Zero);
+			
+			//indeksy do użycia w funckji GetDeviceCaps() zwracającej odpowiednie informacje o sprzęcie
 			const int VERTRES = 10;
 			const int DESKTOPVERTRES = 117;
+
 			int LogicalScreenHeight = GetDeviceCaps(screenDc, VERTRES);
 			int PhysicalScreenHeight = GetDeviceCaps(screenDc, DESKTOPVERTRES);
+
 			float ScreenScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
+
+			//zwracanie uchwytu, przez co może być używany przez inne aplikacje
 			ReleaseDC(IntPtr.Zero, screenDc);
 
-			int dia = Math.Max((int)(widt.X * ScreenScalingFactor), 2);
+			//zmienna dia przechowująca wartość średnicy punktu 
+			int dia = Math.Max((int)(pt.X * ScreenScalingFactor), 2);
+
+			//rysowanie punktu za pomocą metod FillEllipse (wypełnienie kolorem) i DrawEllipse (naniesienie na ekran) 
+			//z przestrzeni nazw Graphics
 			g.FillEllipse(cbrush, 64 - dia / 2, 64 - dia / 2, dia, dia);
 			if (dia <= 5)
 			{
@@ -1000,6 +1137,8 @@ namespace gInk
 				dia += 6;
 				g.DrawEllipse(cpen, 64 - dia / 2, 64 - dia / 2, dia, dia);
 			}
+			
+			//ustawienie kursora na null, by tylko punkt był widoczny
 			IC.Cursor = new System.Windows.Forms.Cursor(bitmaptip.GetHicon());
 			
 		}
@@ -1007,6 +1146,11 @@ namespace gInk
 		short LastESCStatus = 0;
 		private void tiSlide_Tick(object sender, EventArgs e)
 		{
+			//funkcja wykonująca ticki zegara dołączonego jako kontrolka do FormCollection
+
+			//skupia się głównie na obsłudze animacji wjazdu na ekran i wyjazdu z ekranu toolbara przy kliknięciu przycisku "Dock",
+			//jak również obsłudze skrótów klawiszowych
+
 			// ignore the first tick
 			if (LastTickTime.Year == 1987)
 			{
@@ -1014,6 +1158,7 @@ namespace gInk
 				return;
 			}
 
+			//zmienna aimedLeft 
 			int aimedleft = gpButtonsLeft;
 			if (ButtonsEntering == -9)
 			{
@@ -1374,7 +1519,39 @@ namespace gInk
 			IsMovingToolbar = 0;
 		}
 
-		private void btInkVisible_Click(object sender, EventArgs e)
+		public void SelectLineMode()
+		{
+			if (ToolbarMoved)
+			{
+				ToolbarMoved = false;
+				return;
+			}
+
+			SelectPen(-4);
+		}
+
+		public void SelectRectMode()
+		{
+			if (ToolbarMoved)
+			{
+				ToolbarMoved = false;
+				return;
+			}
+
+			SelectPen(-5);
+		}
+
+		private void btLine_Click(object sender, EventArgs e)
+        {
+			SelectLineMode();
+        }
+
+        private void btRect_Click(object sender, EventArgs e)
+		{
+			SelectRectMode();
+		}
+
+        private void btInkVisible_Click(object sender, EventArgs e)
 		{
 			//metoda wywoływana przy kliknięciu na przycisk z okiem (ukrywanie/odkrywanie rysunków)
 			if (ToolbarMoved)

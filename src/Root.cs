@@ -71,6 +71,9 @@ namespace gInk
 		public bool AllowHotkeyInPointerMode = true;
 		public int gpButtonsLeft, gpButtonsTop;
 
+		public bool LineEnabled = true;
+		public bool RectEnabled = true;
+
 		// opcje zaawansowane
 
 		public string CloseOnSnap = "blankonly";
@@ -109,6 +112,9 @@ namespace gInk
 
 		public bool PanMode = false;
 		public bool InkVisible = true;
+
+		public bool LineMode = false;
+		public bool RectMode = false;
 
 
 		public Ink[] UndoStrokes;
@@ -382,6 +388,8 @@ namespace gInk
 
 			UpdateDisplay(false);
 		}
+
+		
 
 		public void RedoInk()
 		{

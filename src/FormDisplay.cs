@@ -49,6 +49,7 @@ namespace gInk
 			Root = root;
 			InitializeComponent();
 
+			//dla obecnego wirtualnego ekranu ustanawia siê pozycja i wymiary FormDisplay
 			this.Left = SystemInformation.VirtualScreen.Left;
 			this.Top = SystemInformation.VirtualScreen.Top;
 			//int targetbottom = 0;
@@ -63,22 +64,36 @@ namespace gInk
 			this.Width = SystemInformation.VirtualScreen.Width;
 			this.Height = SystemInformation.VirtualScreen.Height - 2;
 
+			//inicjacja uchwytów do pe³nego p³ótna (Canvus) i p³ótna dla jednego rysunku (OneStrokeCanvus)
+			//przypisowane s¹ uchwyty dla map bitowych GDI o wymiarach równych jednemu ca³emu ekranowi
 			Bitmap InitCanvus = new Bitmap(this.Width, this.Height);
 			Canvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 			OneStrokeCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 			//BlankCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 
+			//uchwyt dla ca³ego ekranu
 			IntPtr screenDc = GetDC(IntPtr.Zero);
+
+			//tworzenie Device Contextów dla naszego ekranu (CreateCompatibleDC)
+			//oraz przypisywanie uchwytów do konkretnych DC (SelectObject)
 			canvusDc = CreateCompatibleDC(screenDc);
 			SelectObject(canvusDc, Canvus);
 			onestrokeDc = CreateCompatibleDC(screenDc);
 			SelectObject(onestrokeDc, OneStrokeCanvus);
+
 			//blankcanvusDc = CreateCompatibleDC(screenDc);
 			//SelectObject(blankcanvusDc, BlankCanvus);
+
+			//inicjacja klasy Graphics dla pe³nego p³ótna za pomoc¹ stworzonego wczeœniej Device Context'u
 			gCanvus = Graphics.FromHdc(canvusDc);
+			//tryb kompozycji SourceCopy, aby naniesiony kolor po prostu przykrywa³ kolor pod nim
 			gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+			//analogiczna inicjacja dla p³ótna pojedynczego
 			gOneStrokeCanvus = Graphics.FromHdc(onestrokeDc);
 			gOneStrokeCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+
 			if (Root.AutoScroll)
 			{
 				hScreenBitmap = InitCanvus.GetHbitmap(Color.FromArgb(0));
@@ -87,15 +102,22 @@ namespace gInk
 				screenbits = new byte[50000000];
 				lastscreenbits = new byte[50000000];
 			}
+
+			//zwolnienie DeviceContextu ekranu
 			ReleaseDC(IntPtr.Zero, screenDc);
 			InitCanvus.Dispose();
 
 			//this.DoubleBuffered = true;
 
+			//inicjalizacja bitmap dla toolbara i dla panelu wyboru gruboœci pisaka
 			int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
 			gpButtonsImage = new Bitmap(2400, gpheight);
 			gpPenWidthImage = new Bitmap(200, gpheight);
+
 			TransparentBrush = new SolidBrush(Color.Transparent);
+
+			//SemiTransparentBrush u¿ywany w trybie tworzenie screenshota,
+			//jest to bia³y kolor ekranu z odpowiedni¹ przezroczystoœci¹
 			SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
 
 
@@ -104,6 +126,8 @@ namespace gInk
 
 		public void ToTopMostThrough()
 		{
+			//ustawienie FormDisplay na pierwsz¹ warstwê, nad reszt¹ otwartych aplikacji
+
 			UInt32 dwExStyle = GetWindowLong(this.Handle, -20);
 			SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
 			SetWindowPos(this.Handle, (IntPtr)0, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0004 | 0x0010 | 0x0020);
@@ -114,35 +138,48 @@ namespace gInk
 
 		public void ClearCanvus()
 		{
+			//metoda czyszcz¹ca p³ótno za pomoc¹ metody Clear() z klasy Graphics
+
 			gCanvus.Clear(Color.Transparent);
 		}
 		public void ClearCanvus(Graphics g)
 		{
+			//przeci¹¿enie metody ClearCanvus() dla konkretnej instacji klasy Graphics (domyœ³nie jest dla pe³nego p³ótna)
+
 			g.Clear(Color.Transparent);
 		}
 
 		public void DrawSnapping(Rectangle rect)
 		{
+			//CompositingMode zmieniony na SourceOver, czyli zmywanie siê z kolorem pod spodem
 			gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
+				//gdy trzymamy LPM wype³niaj¹ siê 4 prostok¹ty stykaj¹ce siê z poszczególnymi bokami naszego prostok¹ta wyznaczaj¹cego wymiary screenshota, ale bêd¹ce poza nim
+				//otrzymany jest efekt, ¿e wewn¹trz naszego prostok¹ta mamy po prostu przezroczystoœæ - widzimy co zrzucamy
 				gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(0, 0, rect.Left, this.Height));
 				gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Right, 0, this.Width - rect.Right, this.Height));
 				gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Left, 0, rect.Width, rect.Top));
 				gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Left, rect.Bottom, rect.Width, this.Height - rect.Bottom));
+				
+				//rysowanie prostok¹ta oznaczaj¹cego wymiary zrzutu ekranu (bardziej ciemno-szara ramka)
 				Pen pen = new Pen(Color.FromArgb(200, 80, 80, 80));
 				pen.Width = 3;
 				gCanvus.DrawRectangle(pen, rect);
 			}
 			else
 			{
+				//gdy nie trzymamy LPM ca³y ekran jest pokryty SemiTransparentBrush (pó³-przezroczyste bia³e t³o)
 				gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(0, 0, this.Width, this.Height));
 			}
+
+			//powrót do normalnego CompositingMode
 			gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 		}
 
 		public void DrawButtons(bool redrawbuttons, bool exiting = false)
 		{
+			//pokazanie na ekranie pe³nej ramki toolbara (nie konkretnych przycisków)
 			if (Root.AlwaysHideToolbar)
 				return;
 
@@ -172,6 +209,7 @@ namespace gInk
 			}
 			gCanvus.DrawImage(gpButtonsImage, left, top, new Rectangle(0, 0, drawwidth, height), GraphicsUnit.Pixel);
 
+			//pokazanie panelu z wyborem gruboœci, jeœli ma byæ widoczny
 			if (Root.gpPenWidthVisible)
 			{
 				top = Root.FormCollection.gpPenWidth.Top;
@@ -186,6 +224,8 @@ namespace gInk
 		}
 		public void DrawButtons(Graphics g, bool redrawbuttons, bool exiting = false)
 		{
+			//przeci¹¿enie metody DrawButtons() która dzia³a na konkretnej instacji klasy Graphics
+			//zawiera ten sam kod, co domyœlna metoda DrawButtons()
 			int top, height, left, width;
 			int fullwidth;
 			int gpbl;
@@ -227,17 +267,21 @@ namespace gInk
 
 		public void DrawStrokes()
 		{
+			//nanoszenie na ekran wszystkich rysunków (podczas, gdy nie jest aktywne ukrycie ich poprzez przycisk)
 			if (Root.InkVisible)
 				Root.FormCollection.IC.Renderer.Draw(gCanvus, Root.FormCollection.IC.Ink.Strokes);
 		}
 		public void DrawStrokes(Graphics g)
 		{
+			//przeci¹¿enie DrawStrokes() dla konkretnej instancji klasy Graphics
 			if (Root.InkVisible)
 				Root.FormCollection.IC.Renderer.Draw(g, Root.FormCollection.IC.Ink.Strokes);
 		}
 
 		public void MoveStrokes(int dy)
 		{
+			//metoda u¿ywana przy AutoScroll, by rysunki przenosi³y siê wraz ze scrollowaniem myszk¹
+			//funkcja AutoScroll nie ma jednak opcji uruchomienia z poziomu u¿ytkownika
 			Point pt1 = new Point(0, 0);
 			Point pt2 = new Point(0, 100);
 			Root.FormCollection.IC.Renderer.PixelToInkSpace(gCanvus, ref pt1);
