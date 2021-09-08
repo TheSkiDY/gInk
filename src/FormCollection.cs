@@ -351,7 +351,22 @@ namespace gInk
 
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-			//przy zakończeniu jednego rysunku uruchamia się procedura obsługi cofania (undo)
+			//metoda uruchamiana przy zakończeniu rysowania jednej "kreski"
+
+			if(Root.RectMode)
+			{
+				//zwyczajny wygenerowany przez myszkę Stroke jest usuwany, by być zastąpionym specjalnym wygenerowanym w kodzie
+				//na podstawie zapisanych wcześniej współrzędnych
+				IC.Ink.DeleteStroke(e.Stroke);
+				AddRectangle();
+            }
+
+			if(Root.LineMode)
+			{
+				IC.Ink.DeleteStroke(e.Stroke);
+				AddLine();
+            }
+	
 			SaveUndoStrokes();
 		}
 
@@ -388,6 +403,7 @@ namespace gInk
 
 		private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
+			//metoda uruchamiana przy rozpoczęciu rysowania (pierwsze naciśnięcie myszki)
 			if (Root.gpPenWidthVisible)
 			{
 				Root.gpPenWidthVisible = false;
@@ -395,6 +411,20 @@ namespace gInk
 			}
 
 			Root.FingerInAction = true;
+			
+			if(Root.LineMode)
+            {
+				Root.LineStartX = e.X;
+				Root.LineStartY = e.Y;
+            }
+
+			if(Root.RectMode)
+            {
+				Root.RectStartX = e.X;
+				Root.RectStartY = e.Y;
+				Root.DrawnRect = new Rectangle(e.X, e.Y, 0, 0);
+			}
+
 			if (Root.Snapping == 1)
 			{
 				Root.SnappingX = e.X;
@@ -411,11 +441,15 @@ namespace gInk
 			LasteXY.X = e.X;
 			LasteXY.Y = e.Y;
 			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref LasteXY);
+
+			
 		}
 
 		public Point LasteXY;
 		private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
+			//metoda uruchamiana przy ruszaniu myszką
+
 			if (LasteXY.X == 0 && LasteXY.Y == 0)
 			{
 				LasteXY.X = e.X;
@@ -424,6 +458,21 @@ namespace gInk
 			}
 			Point currentxy = new Point(e.X, e.Y);
 			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref currentxy);
+
+			if(Root.LineMode)
+            {
+				Root.LineEndX = e.X;
+				Root.LineEndY = e.Y;
+            }
+
+			if(Root.RectMode)
+            {
+				int left = Math.Min(Root.RectStartX, e.X);
+				int top = Math.Min(Root.RectStartY, e.Y);
+				int width = Math.Abs(Root.RectStartX - e.X);
+				int height = Math.Abs(Root.RectStartY - e.Y);
+				Root.DrawnRect = new Rectangle(left, top, width, height);
+			}
 
 			if (Root.Snapping == 2)
 			{
@@ -442,6 +491,8 @@ namespace gInk
 			}
 
 			LasteXY = currentxy;
+
+			
 		}
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
@@ -1540,6 +1591,57 @@ namespace gInk
 
 			SelectPen(-5);
 		}
+
+		public void AddLine()
+        {
+			//metoda dodająca linię do zbioru "strokesów", aby łatwo działać na nim resztą
+			//operacji, jak cofanie, redo itd.
+
+			//definicja punktów definiujących końcówki linii
+			Point[] linePoints = new Point[2];
+
+			//początek
+			linePoints[0] = new Point(Root.LineStartX, Root.LineStartY);
+			//koniec
+			linePoints[1] = new Point(Root.LineEndX, Root.LineEndY);
+
+			//ustawienie wyświetlania
+			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref linePoints);
+
+			//inicjalizacja stroke'a do dodania do zbioru
+			Stroke lineStroke = IC.Ink.CreateStroke(linePoints);
+			lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+			lineStroke.DrawingAttributes.AntiAliased = true;
+			lineStroke.DrawingAttributes.FitToCurve = false;
+
+			//dodanie do zbioru
+			IC.Ink.Strokes.Add(lineStroke);
+        }
+
+		public void AddRectangle()
+        {
+			//metoda dodająca prostokąt do zbioru "strokesów"
+			//analogiczna do metody wyżej dotyczącej tworzenia linii
+
+			//inicjacja pięciu punktów zamiast czterech, aby zakończyć rysowanie prostokąta
+			//w tym samym miejscu, co się zaczął (aby był zamknięty)
+			Point[] rectPoints = new Point[5];
+			rectPoints[0] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
+			rectPoints[1] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y + Root.DrawnRect.Height);
+			rectPoints[2] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y + Root.DrawnRect.Height);
+			rectPoints[3] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y);
+			rectPoints[4] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
+
+			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref rectPoints);
+
+			Stroke rectStroke = IC.Ink.CreateStroke(rectPoints);
+			rectStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+			rectStroke.DrawingAttributes.AntiAliased = true;
+			rectStroke.DrawingAttributes.FitToCurve = false;
+
+			IC.Ink.Strokes.Add(rectStroke);
+			
+        }
 
 		private void btLine_Click(object sender, EventArgs e)
         {

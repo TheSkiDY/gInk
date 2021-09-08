@@ -116,6 +116,10 @@ namespace gInk
 		public bool LineMode = false;
 		public bool RectMode = false;
 
+		//zmienne do przechowywania wsp. punktu rozpoczęcia rysowania (do rysowania nowych grafik)
+		public int LineStartX, LineStartY, LineEndX, LineEndY;
+		public int RectStartX, RectStartY;
+		public Rectangle DrawnRect;
 
 		public Ink[] UndoStrokes;
 		//public Ink UponUndoStrokes;

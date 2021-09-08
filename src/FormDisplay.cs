@@ -564,7 +564,16 @@ namespace gInk
 						Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref lt);
 						Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref rb);
 						BitBlt(canvusDc, lt.X, lt.Y, rb.X - lt.X, rb.Y - lt.Y, onestrokeDc, lt.X, lt.Y, (uint)CopyPixelOperation.SourceCopy);
-						Root.FormCollection.IC.Renderer.Draw(gCanvus, stroke, Root.FormCollection.IC.DefaultDrawingAttributes);
+						if(Root.LineMode)
+                        {
+
+                        }
+						else if (Root.RectMode)
+                        {
+							
+                        }
+						else
+							Root.FormCollection.IC.Renderer.Draw(gCanvus, stroke, Root.FormCollection.IC.DefaultDrawingAttributes);
 					}
 					UpdateFormDisplay(true);
 				}
@@ -622,7 +631,9 @@ namespace gInk
 			}
 		}
 
-		private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
+      
+
+        private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			DeleteObject(Canvus);
 			//DeleteObject(BlankCanvus);
