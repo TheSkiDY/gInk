@@ -323,6 +323,26 @@ namespace gInk.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap normal_draw {
+            get {
+                object obj = ResourceManager.GetObject("normal_draw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap normal_draw_act {
+            get {
+                object obj = ResourceManager.GetObject("normal_draw_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap pan {
             get {
                 object obj = ResourceManager.GetObject("pan", resourceCulture);

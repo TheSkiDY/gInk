@@ -206,6 +206,8 @@
   <ItemGroup>
     <Content Include="lines.png" />
     <Content Include="lines_act.png" />
+    <None Include="normal_draw.png" />
+    <None Include="normal_draw_act.png" />
     <Content Include="rect.png" />
     <Content Include="rect_act.png" />
     <None Include="paneloption.png" />

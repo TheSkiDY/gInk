@@ -485,6 +485,24 @@ namespace gInk
 			ReleaseDC(IntPtr.Zero, screenDc);
 		}
 
+		public void DrawOtherShape(Graphics g)
+        {
+			Pen pen = new Pen(Root.PenAttr[Root.CurrentPen].Color, 3);
+            switch (Root.currentDrawingMode)
+            {
+				case Root.DrawingMode.Line:
+					g.DrawLine(pen, Root.LineStartX, Root.LineStartY, Root.LineEndX, Root.LineEndY);
+					break;
+				case Root.DrawingMode.Rectangle:
+					g.DrawRectangle(pen, Root.DrawnRect);
+					break;
+				case Root.DrawingMode.Ellipse:
+					g.DrawEllipse(pen, Root.DrawnRect);
+					break;
+			}
+
+        }
+
 		int stackmove = 0;
 		int Tick = 0;
 		DateTime TickStartTime;
@@ -552,7 +570,8 @@ namespace gInk
 				//ClearCanvus();
 				//DrawStrokes();
 				//DrawButtons(false);
-				//UpdateFormDisplay();	
+				//UpdateFormDisplay();
+				//
 				if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
 				{
 					Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
@@ -564,16 +583,10 @@ namespace gInk
 						Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref lt);
 						Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref rb);
 						BitBlt(canvusDc, lt.X, lt.Y, rb.X - lt.X, rb.Y - lt.Y, onestrokeDc, lt.X, lt.Y, (uint)CopyPixelOperation.SourceCopy);
-						if(Root.LineMode)
-                        {
-
-                        }
-						else if (Root.RectMode)
-                        {
-							
-                        }
-						else
+						if(Root.currentDrawingMode == Root.DrawingMode.Normal)
 							Root.FormCollection.IC.Renderer.Draw(gCanvus, stroke, Root.FormCollection.IC.DefaultDrawingAttributes);
+						else
+							DrawOtherShape(gCanvus);
 					}
 					UpdateFormDisplay(true);
 				}
@@ -630,8 +643,6 @@ namespace gInk
 				}
 			}
 		}
-
-      
 
         private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
 		{

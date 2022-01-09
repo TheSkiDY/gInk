@@ -113,6 +113,18 @@ namespace gInk
 		public bool PanMode = false;
 		public bool InkVisible = true;
 
+		public enum DrawingMode
+        {
+			Normal,
+			Line,
+			Rectangle,
+			Arrow,
+			Ellipse,
+        };
+
+		public DrawingMode currentDrawingMode = DrawingMode.Normal;
+
+
 		public bool LineMode = false;
 		public bool RectMode = false;
 

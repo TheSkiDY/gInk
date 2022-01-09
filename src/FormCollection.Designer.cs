@@ -30,6 +30,9 @@
 		{
             this.components = new System.ComponentModel.Container();
             this.gpButtons = new System.Windows.Forms.Panel();
+            this.btDraw = new System.Windows.Forms.Button();
+            this.btRect = new System.Windows.Forms.Button();
+            this.btLine = new System.Windows.Forms.Button();
             this.btInkVisible = new System.Windows.Forms.Button();
             this.btPan = new System.Windows.Forms.Button();
             this.btDock = new System.Windows.Forms.Button();
@@ -44,8 +47,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.gpPenWidth = new System.Windows.Forms.Panel();
             this.pboxPenWidthIndicator = new System.Windows.Forms.PictureBox();
-            this.btLine = new System.Windows.Forms.Button();
-            this.btRect = new System.Windows.Forms.Button();
             this.gpButtons.SuspendLayout();
             this.gpPenWidth.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).BeginInit();
@@ -54,6 +55,7 @@
             // gpButtons
             // 
             this.gpButtons.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.gpButtons.Controls.Add(this.btDraw);
             this.gpButtons.Controls.Add(this.btRect);
             this.gpButtons.Controls.Add(this.btLine);
             this.gpButtons.Controls.Add(this.btInkVisible);
@@ -67,13 +69,67 @@
             this.gpButtons.Controls.Add(this.btClear);
             this.gpButtons.Controls.Add(this.btUndo);
             this.gpButtons.Location = new System.Drawing.Point(30, 60);
-            this.gpButtons.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gpButtons.Margin = new System.Windows.Forms.Padding(2);
             this.gpButtons.Name = "gpButtons";
             this.gpButtons.Size = new System.Drawing.Size(1035, 67);
             this.gpButtons.TabIndex = 3;
             this.gpButtons.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseDown);
             this.gpButtons.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseMove);
             this.gpButtons.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseUp);
+            // 
+            // btDraw
+            // 
+            this.btDraw.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btDraw.FlatAppearance.BorderSize = 0;
+            this.btDraw.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btDraw.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btDraw.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btDraw.ForeColor = System.Drawing.Color.Transparent;
+            this.btDraw.Image = global::gInk.Properties.Resources.normal_draw;
+            this.btDraw.Location = new System.Drawing.Point(115, 3);
+            this.btDraw.Margin = new System.Windows.Forms.Padding(2);
+            this.btDraw.Name = "btDraw";
+            this.btDraw.Size = new System.Drawing.Size(57, 57);
+            this.btDraw.TabIndex = 6;
+            this.toolTip.SetToolTip(this.btDraw, "Pen width");
+            this.btDraw.UseVisualStyleBackColor = true;
+            this.btDraw.Click += new System.EventHandler(this.btDraw_Click);
+            // 
+            // btRect
+            // 
+            this.btRect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btRect.FlatAppearance.BorderSize = 0;
+            this.btRect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btRect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btRect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btRect.ForeColor = System.Drawing.Color.Transparent;
+            this.btRect.Image = global::gInk.Properties.Resources.rect;
+            this.btRect.Location = new System.Drawing.Point(189, 3);
+            this.btRect.Margin = new System.Windows.Forms.Padding(2);
+            this.btRect.Name = "btRect";
+            this.btRect.Size = new System.Drawing.Size(57, 57);
+            this.btRect.TabIndex = 5;
+            this.toolTip.SetToolTip(this.btRect, "Pen width");
+            this.btRect.UseVisualStyleBackColor = true;
+            this.btRect.Click += new System.EventHandler(this.btRect_Click);
+            // 
+            // btLine
+            // 
+            this.btLine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btLine.FlatAppearance.BorderSize = 0;
+            this.btLine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btLine.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.btLine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLine.ForeColor = System.Drawing.Color.Transparent;
+            this.btLine.Image = global::gInk.Properties.Resources.lines;
+            this.btLine.Location = new System.Drawing.Point(260, 3);
+            this.btLine.Margin = new System.Windows.Forms.Padding(2);
+            this.btLine.Name = "btLine";
+            this.btLine.Size = new System.Drawing.Size(57, 57);
+            this.btLine.TabIndex = 4;
+            this.toolTip.SetToolTip(this.btLine, "Pen width");
+            this.btLine.UseVisualStyleBackColor = true;
+            this.btLine.Click += new System.EventHandler(this.btLine_Click);
             // 
             // btInkVisible
             // 
@@ -84,7 +140,7 @@
             this.btInkVisible.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btInkVisible.Image = global::gInk.Properties.Resources.visible;
             this.btInkVisible.Location = new System.Drawing.Point(877, 3);
-            this.btInkVisible.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btInkVisible.Margin = new System.Windows.Forms.Padding(2);
             this.btInkVisible.Name = "btInkVisible";
             this.btInkVisible.Size = new System.Drawing.Size(57, 57);
             this.btInkVisible.TabIndex = 3;
@@ -104,7 +160,7 @@
             this.btPan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btPan.Image = global::gInk.Properties.Resources.pan;
             this.btPan.Location = new System.Drawing.Point(815, 3);
-            this.btPan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btPan.Margin = new System.Windows.Forms.Padding(2);
             this.btPan.Name = "btPan";
             this.btPan.Size = new System.Drawing.Size(57, 57);
             this.btPan.TabIndex = 2;
@@ -126,7 +182,7 @@
             this.btDock.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btDock.Image = global::gInk.Properties.Resources.dock;
             this.btDock.Location = new System.Drawing.Point(0, 3);
-            this.btDock.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btDock.Margin = new System.Windows.Forms.Padding(2);
             this.btDock.Name = "btDock";
             this.btDock.Size = new System.Drawing.Size(42, 57);
             this.btDock.TabIndex = 0;
@@ -146,7 +202,7 @@
             this.btPenWidth.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btPenWidth.Image = global::gInk.Properties.Resources.penwidth;
             this.btPenWidth.Location = new System.Drawing.Point(332, 3);
-            this.btPenWidth.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btPenWidth.Margin = new System.Windows.Forms.Padding(2);
             this.btPenWidth.Name = "btPenWidth";
             this.btPenWidth.Size = new System.Drawing.Size(57, 57);
             this.btPenWidth.TabIndex = 0;
@@ -166,7 +222,7 @@
             this.btEraser.ForeColor = System.Drawing.Color.Transparent;
             this.btEraser.Image = global::gInk.Properties.Resources.eraser;
             this.btEraser.Location = new System.Drawing.Point(408, 3);
-            this.btEraser.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btEraser.Margin = new System.Windows.Forms.Padding(2);
             this.btEraser.Name = "btEraser";
             this.btEraser.Size = new System.Drawing.Size(57, 57);
             this.btEraser.TabIndex = 0;
@@ -186,7 +242,7 @@
             this.btSnap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btSnap.Image = global::gInk.Properties.Resources.snap;
             this.btSnap.Location = new System.Drawing.Point(587, 3);
-            this.btSnap.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btSnap.Margin = new System.Windows.Forms.Padding(2);
             this.btSnap.Name = "btSnap";
             this.btSnap.Size = new System.Drawing.Size(57, 57);
             this.btSnap.TabIndex = 0;
@@ -207,7 +263,7 @@
             this.btPointer.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btPointer.Image = global::gInk.Properties.Resources.pointer;
             this.btPointer.Location = new System.Drawing.Point(478, 3);
-            this.btPointer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btPointer.Margin = new System.Windows.Forms.Padding(2);
             this.btPointer.Name = "btPointer";
             this.btPointer.Size = new System.Drawing.Size(57, 57);
             this.btPointer.TabIndex = 0;
@@ -227,7 +283,7 @@
             this.btStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btStop.Image = global::gInk.Properties.Resources.exit;
             this.btStop.Location = new System.Drawing.Point(950, 3);
-            this.btStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btStop.Margin = new System.Windows.Forms.Padding(2);
             this.btStop.Name = "btStop";
             this.btStop.Size = new System.Drawing.Size(57, 57);
             this.btStop.TabIndex = 0;
@@ -247,7 +303,7 @@
             this.btClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btClear.Image = global::gInk.Properties.Resources.garbage;
             this.btClear.Location = new System.Drawing.Point(728, 3);
-            this.btClear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btClear.Margin = new System.Windows.Forms.Padding(2);
             this.btClear.Name = "btClear";
             this.btClear.Size = new System.Drawing.Size(57, 57);
             this.btClear.TabIndex = 1;
@@ -267,7 +323,7 @@
             this.btUndo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btUndo.Image = global::gInk.Properties.Resources.undo;
             this.btUndo.Location = new System.Drawing.Point(657, 3);
-            this.btUndo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btUndo.Margin = new System.Windows.Forms.Padding(2);
             this.btUndo.Name = "btUndo";
             this.btUndo.Size = new System.Drawing.Size(57, 57);
             this.btUndo.TabIndex = 1;
@@ -309,42 +365,6 @@
             this.pboxPenWidthIndicator.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pboxPenWidthIndicator_MouseMove);
             this.pboxPenWidthIndicator.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pboxPenWidthIndicator_MouseUp);
             // 
-            // btLine
-            // 
-            this.btLine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btLine.FlatAppearance.BorderSize = 0;
-            this.btLine.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
-            this.btLine.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
-            this.btLine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btLine.ForeColor = System.Drawing.Color.Transparent;
-            this.btLine.Image = global::gInk.Properties.Resources.lines;
-            this.btLine.Location = new System.Drawing.Point(260, 3);
-            this.btLine.Margin = new System.Windows.Forms.Padding(2);
-            this.btLine.Name = "btLine";
-            this.btLine.Size = new System.Drawing.Size(57, 57);
-            this.btLine.TabIndex = 4;
-            this.toolTip.SetToolTip(this.btLine, "Pen width");
-            this.btLine.UseVisualStyleBackColor = true;
-            this.btLine.Click += new System.EventHandler(this.btLine_Click);
-            // 
-            // btRect
-            // 
-            this.btRect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btRect.FlatAppearance.BorderSize = 0;
-            this.btRect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.WhiteSmoke;
-            this.btRect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke;
-            this.btRect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btRect.ForeColor = System.Drawing.Color.Transparent;
-            this.btRect.Image = global::gInk.Properties.Resources.rect;
-            this.btRect.Location = new System.Drawing.Point(189, 3);
-            this.btRect.Margin = new System.Windows.Forms.Padding(2);
-            this.btRect.Name = "btRect";
-            this.btRect.Size = new System.Drawing.Size(57, 57);
-            this.btRect.TabIndex = 5;
-            this.toolTip.SetToolTip(this.btRect, "Pen width");
-            this.btRect.UseVisualStyleBackColor = true;
-            this.btRect.Click += new System.EventHandler(this.btRect_Click);
-            // 
             // FormCollection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -355,7 +375,7 @@
             this.Controls.Add(this.gpButtons);
             this.ForeColor = System.Drawing.Color.LawnGreen;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCollection";
@@ -390,6 +410,7 @@
 		public System.Windows.Forms.Button btInkVisible;
         public System.Windows.Forms.Button btRect;
         public System.Windows.Forms.Button btLine;
+        public System.Windows.Forms.Button btDraw;
     }
 }
 

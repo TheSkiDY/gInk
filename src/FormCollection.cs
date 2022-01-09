@@ -34,6 +34,8 @@ namespace gInk
 		public Bitmap image_line, image_line_act;
 		public Bitmap image_rect, image_rect_act;
 
+		public Bitmap image_draw, image_draw_act;
+
 		//zmienne kontrolujące podmianę kursora myszki (na czerwony przy rysowaniu, bądź na krzyżyk przy trybie zrzutu ekranu)
 		public System.Windows.Forms.Cursor cursorred, cursorsnap;
 		public System.Windows.Forms.Cursor cursortip;
@@ -90,6 +92,7 @@ namespace gInk
 
 			InitButtonPropertySetup(btLine);
 			InitButtonPropertySetup(btRect);
+			InitButtonPropertySetup(btDraw);
 
 			//inicjalizacja tablicy przycisków widocznych w zależności od aktywnych pisaków do wyboru
 			btPen = new Button[Root.MaxPenCount];
@@ -132,6 +135,10 @@ namespace gInk
 
 			InitButtonPos(btLine, ref cumulatedleft, Root.LineEnabled);
 			InitButtonPos(btRect, ref cumulatedleft, Root.RectEnabled);
+			InitButtonPos(btDraw, ref cumulatedleft, true);
+
+			//dłuższa przerwa między przyciskami
+			cumulatedleft += (int)(btStop.Width * 0.8);
 
 			InitButtonPos(btEraser, ref cumulatedleft, Root.EraserEnabled);
 			InitButtonPos(btPan, ref cumulatedleft, Root.PanEnabled);
@@ -261,6 +268,8 @@ namespace gInk
 			InitButtonBitmap(btLine, ref image_line, gInk.Properties.Resources.lines, g, true);
 			InitButtonBitmap(btRect, ref image_rect_act, gInk.Properties.Resources.rect_act, g, false);
 			InitButtonBitmap(btRect, ref image_rect, gInk.Properties.Resources.rect, g, true);
+			InitButtonBitmap(btDraw, ref image_draw, gInk.Properties.Resources.normal_draw, g, true);
+			InitButtonBitmap(btDraw, ref image_draw_act, gInk.Properties.Resources.normal_draw_act, g, false);
 			
 			//sprawdzenie, czy toolbar jest schowany i odpowiednie dostosowanie obrazku na przycisku "Dock"
 			if (Root.Docked)
@@ -316,6 +325,7 @@ namespace gInk
 
 			this.toolTip.SetToolTip(this.btLine, "Line - test");
 			this.toolTip.SetToolTip(this.btRect, "Rect - test");
+			this.toolTip.SetToolTip(this.btDraw, "Draw - test");
 		}
 
 		private void InitButtonPropertySetup(Button button, double height=defaultButtonHeight, double width=defaultButtonWidth, double top=defaultButtonTop)
@@ -352,21 +362,25 @@ namespace gInk
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 			//metoda uruchamiana przy zakończeniu rysowania jednej "kreski"
-
-			if(Root.RectMode)
-			{
-				//zwyczajny wygenerowany przez myszkę Stroke jest usuwany, by być zastąpionym specjalnym wygenerowanym w kodzie
-				//na podstawie zapisanych wcześniej współrzędnych
+			if(Root.currentDrawingMode != Root.DrawingMode.Normal)
+            {
 				IC.Ink.DeleteStroke(e.Stroke);
-				AddRectangle();
             }
 
-			if(Root.LineMode)
-			{
-				IC.Ink.DeleteStroke(e.Stroke);
-				AddLine();
-            }
-	
+            switch (Root.currentDrawingMode)
+            {
+				case Root.DrawingMode.Line:
+					AddLine();
+					break;
+				case Root.DrawingMode.Rectangle:
+					AddRectangle();
+					break;
+				case Root.DrawingMode.Ellipse:
+					AddEllipse();
+					break;
+				default:
+					break;
+			}	
 			SaveUndoStrokes();
 		}
 
@@ -411,18 +425,18 @@ namespace gInk
 			}
 
 			Root.FingerInAction = true;
-			
-			if(Root.LineMode)
-            {
-				Root.LineStartX = e.X;
-				Root.LineStartY = e.Y;
-            }
 
-			if(Root.RectMode)
+            switch (Root.currentDrawingMode)
             {
-				Root.RectStartX = e.X;
-				Root.RectStartY = e.Y;
-				Root.DrawnRect = new Rectangle(e.X, e.Y, 0, 0);
+				case Root.DrawingMode.Line:
+					Root.LineStartX = e.X;
+					Root.LineStartY = e.Y;
+					break;
+				case Root.DrawingMode.Rectangle:
+					Root.RectStartX = e.X;
+					Root.RectStartY = e.Y;
+					Root.DrawnRect = new Rectangle(e.X, e.Y, 0, 0);
+					break;
 			}
 
 			if (Root.Snapping == 1)
@@ -459,19 +473,19 @@ namespace gInk
 			Point currentxy = new Point(e.X, e.Y);
 			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref currentxy);
 
-			if(Root.LineMode)
+			switch(Root.currentDrawingMode)
             {
-				Root.LineEndX = e.X;
-				Root.LineEndY = e.Y;
-            }
-
-			if(Root.RectMode)
-            {
-				int left = Math.Min(Root.RectStartX, e.X);
-				int top = Math.Min(Root.RectStartY, e.Y);
-				int width = Math.Abs(Root.RectStartX - e.X);
-				int height = Math.Abs(Root.RectStartY - e.Y);
-				Root.DrawnRect = new Rectangle(left, top, width, height);
+				case Root.DrawingMode.Line:
+					Root.LineEndX = e.X;
+					Root.LineEndY = e.Y;
+					break;
+				case Root.DrawingMode.Rectangle:
+					int left = Math.Min(Root.RectStartX, e.X);
+					int top = Math.Min(Root.RectStartY, e.Y);
+					int width = Math.Abs(Root.RectStartX - e.X);
+					int height = Math.Abs(Root.RectStartY - e.Y);
+					Root.DrawnRect = new Rectangle(left, top, width, height);
+					break;
 			}
 
 			if (Root.Snapping == 2)
@@ -623,99 +637,71 @@ namespace gInk
 			while (exc && exceptiontick < 3);
 		}
 
+		public void DefaultCursorSetup()
+        {
+			var size = Root.CursorSize;
+			switch (size)
+			{
+				case 0:
+					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
+					break;
+				case 1:
+					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
+					break;
+				case 2:
+					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
+					break;
+				case 3:
+					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
+					break;
+				case 4:
+					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
+					break;
+			}
+			IC.Cursor = cursorred;
+		}
+
+		public void SelectDrawingMode(Root.DrawingMode mode)
+        {
+			if (this.Cursor != System.Windows.Forms.Cursors.Default)
+				this.Cursor = System.Windows.Forms.Cursors.Default;
+
+			Root.PanMode = false;
+			if (Root.CanvasCursor == 0)
+				DefaultCursorSetup();
+
+			switch (mode)
+            {
+				case Root.DrawingMode.Normal:
+					Root.currentDrawingMode = Root.DrawingMode.Normal;
+					btDraw.Image = image_draw_act;
+					btLine.Image = image_line;
+					btRect.Image = image_rect;
+					break;
+				case Root.DrawingMode.Line:
+					Root.currentDrawingMode = Root.DrawingMode.Line;
+					btDraw.Image = image_draw;
+					btLine.Image = image_line_act;
+					btRect.Image = image_rect;
+					break;
+				case Root.DrawingMode.Rectangle:
+					Root.currentDrawingMode = Root.DrawingMode.Rectangle;
+					btDraw.Image = image_draw;
+					btLine.Image = image_line;
+					btRect.Image = image_rect_act;
+					break;
+				case Root.DrawingMode.Ellipse:
+					Root.currentDrawingMode = Root.DrawingMode.Ellipse;
+					btDraw.Image = image_draw;
+					btLine.Image = image_line;
+					btRect.Image = image_rect_act;
+					break;
+			}
+        }
+
 		public void SelectPen(int pen)
 		{
 			// -3=pan, -2=pointer, -1=erasor, 0+=pens
-			if(pen == -5)
-            {
-				if (this.Cursor != System.Windows.Forms.Cursors.Default)
-					this.Cursor = System.Windows.Forms.Cursors.Default;
-
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
-				btLine.Image = image_line;
-				btRect.Image = image_rect_act;
-				btEraser.Image = image_eraser;
-				btPointer.Image = image_pointer;
-				btPan.Image = image_pan;
-
-				//RectMode()
-
-				Root.LineMode = false;
-				Root.RectMode = true;
-				Root.PanMode = false;
-
-				if (Root.CanvasCursor == 0)
-				{
-					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
-					var size = Root.CursorSize;
-					switch (size)
-					{
-						case 0:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
-							break;
-						case 1:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
-							break;
-						case 2:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
-							break;
-						case 3:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
-							break;
-						case 4:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
-							break;
-					}
-					IC.Cursor = cursorred;
-				}
-			}
-
-			if(pen == -4)
-            {
-				if (this.Cursor != System.Windows.Forms.Cursors.Default)
-					this.Cursor = System.Windows.Forms.Cursors.Default;
-
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
-				btLine.Image = image_line_act;
-				btRect.Image = image_rect;
-				btEraser.Image = image_eraser;
-				btPointer.Image = image_pointer;
-				btPan.Image = image_pan;
-
-				//LineMode()
-
-				Root.LineMode = true;
-				Root.RectMode = false;
-				Root.PanMode = false;
-
-				if (Root.CanvasCursor == 0)
-				{
-					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
-					var size = Root.CursorSize;
-					switch (size)
-					{
-						case 0:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
-							break;
-						case 1:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
-							break;
-						case 2:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
-							break;
-						case 3:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
-							break;
-						case 4:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
-							break;
-					}
-					IC.Cursor = cursorred;
-				}
-			}
-
 			if (pen == -3)
 			{
 				//uruchomienie Pan Mode, czyli przenoszenie całości rysunków 
@@ -726,11 +712,10 @@ namespace gInk
 				btPan.Image = image_pan_act;
 				btLine.Image = image_line;
 				btRect.Image = image_rect;
+				btDraw.Image = image_draw;
 				EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = true;
-				Root.LineMode = false;
-				Root.RectMode = false;
 
 				try
 				{
@@ -753,11 +738,10 @@ namespace gInk
 				btPan.Image = image_pan;
 				btLine.Image = image_line;
 				btRect.Image = image_rect;
+				btDraw.Image = image_draw;
 				EnterEraserMode(false);
 				Root.Pointer();
 				Root.PanMode = false;
-				Root.LineMode = false;
-				Root.RectMode = false;
 			}
 			else if (pen == -1)
 			{
@@ -772,35 +756,15 @@ namespace gInk
 				btPan.Image = image_pan;
 				btLine.Image = image_line;
 				btRect.Image = image_rect;
+				btDraw.Image = image_draw;
 				EnterEraserMode(true);
 				Root.UnPointer();
 				Root.PanMode = false;
-				Root.LineMode = false;
-				Root.RectMode = false;
 
 				if (Root.CanvasCursor == 0)
 				{
 					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
-					var size = Root.CursorSize;
-					switch(size)
-                    {
-						case 0:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
-							break;
-						case 1:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
-							break;
-						case 2:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
-							break;
-						case 3:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
-							break;
-						case 4:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
-							break;
-					}
-					IC.Cursor = cursorred;
+					DefaultCursorSetup();
 				}
 				else if (Root.CanvasCursor == 1)
 					//metoda zastępująca kursor kropką o kolorze i średnicy odpowiadającym kolorze aktywnego pisaka i jego grubości
@@ -838,37 +802,15 @@ namespace gInk
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan;
-				btLine.Image = image_line;
-				btRect.Image = image_rect;
+				SelectDrawingMode(Root.currentDrawingMode);
 				EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = false;
-				Root.LineMode = false; //!!!!!
-				Root.RectMode = false;
 
 				if (Root.CanvasCursor == 0)
 				{
 					//ustawienie specjalnego kursora, switch dobierający odpowiedni rozmiar w zależności od trackbara "Cursor size"
-					var size = Root.CursorSize;
-					switch (size)
-					{
-						case 0:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred0.Handle);
-							break;
-						case 1:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred1.Handle);
-							break;
-						case 2:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred2.Handle);
-							break;
-						case 3:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred3.Handle);
-							break;
-						case 4:
-							cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred4.Handle);
-							break;
-					}
-					IC.Cursor = cursorred;
+					DefaultCursorSetup();
 				}
 				else if (Root.CanvasCursor == 1)
 					SetPenTipCursor();
@@ -1570,6 +1512,17 @@ namespace gInk
 			IsMovingToolbar = 0;
 		}
 
+		public void SelectNormalMode()
+        {
+			if(ToolbarMoved)
+            {
+				ToolbarMoved = false;
+				return;
+            }
+			SelectDrawingMode(Root.DrawingMode.Normal);
+			SelectPen(Root.CurrentPen);
+        }
+
 		public void SelectLineMode()
 		{
 			if (ToolbarMoved)
@@ -1578,7 +1531,8 @@ namespace gInk
 				return;
 			}
 
-			SelectPen(-4);
+			SelectDrawingMode(Root.DrawingMode.Line);
+			SelectPen(Root.CurrentPen);
 		}
 
 		public void SelectRectMode()
@@ -1589,7 +1543,8 @@ namespace gInk
 				return;
 			}
 
-			SelectPen(-5);
+			SelectDrawingMode(Root.DrawingMode.Rectangle);
+			SelectPen(Root.CurrentPen);
 		}
 
 		public void AddLine()
@@ -1618,7 +1573,7 @@ namespace gInk
 			IC.Ink.Strokes.Add(lineStroke);
         }
 
-		public void AddRectangle()
+        public void AddRectangle()
         {
 			//metoda dodająca prostokąt do zbioru "strokesów"
 			//analogiczna do metody wyżej dotyczącej tworzenia linii
@@ -1626,13 +1581,14 @@ namespace gInk
 			//inicjacja pięciu punktów zamiast czterech, aby zakończyć rysowanie prostokąta
 			//w tym samym miejscu, co się zaczął (aby był zamknięty)
 			Point[] rectPoints = new Point[5];
-			rectPoints[0] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
-			rectPoints[1] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y + Root.DrawnRect.Height);
-			rectPoints[2] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y + Root.DrawnRect.Height);
-			rectPoints[3] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y);
-			rectPoints[4] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
+			
+            rectPoints[0] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
+            rectPoints[1] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y + Root.DrawnRect.Height);
+            rectPoints[2] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y + Root.DrawnRect.Height);
+            rectPoints[3] = new Point(Root.DrawnRect.X + Root.DrawnRect.Width, Root.DrawnRect.Y);
+            rectPoints[4] = new Point(Root.DrawnRect.X, Root.DrawnRect.Y);
 
-			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref rectPoints);
+            IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref rectPoints);
 
 			Stroke rectStroke = IC.Ink.CreateStroke(rectPoints);
 			rectStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
@@ -1641,6 +1597,17 @@ namespace gInk
 
 			IC.Ink.Strokes.Add(rectStroke);
 			
+        }
+
+		public void AddEllipse()
+        {
+
+		}
+
+
+        private void btDraw_Click(object sender, EventArgs e)
+        {
+			SelectNormalMode();
         }
 
 		private void btLine_Click(object sender, EventArgs e)
