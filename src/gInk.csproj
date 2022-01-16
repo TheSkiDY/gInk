@@ -204,6 +204,12 @@
     <None Include="buttonback.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="text_act.png" />
+    <None Include="text.png" />
+    <None Include="ellipse_act.png" />
+    <None Include="ellipse.png" />
+    <None Include="arrow.png" />
+    <None Include="arrow_act.png" />
     <Content Include="lines.png" />
     <Content Include="lines_act.png" />
     <None Include="normal_draw.png" />

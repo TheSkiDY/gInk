@@ -56,6 +56,8 @@
             this.comboCanvasCursor = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.comboFont = new System.Windows.Forms.ComboBox();
+            this.lbFont = new System.Windows.Forms.Label();
             this.tbCursorsize = new System.Windows.Forms.TrackBar();
             this.lbCursorsize = new System.Windows.Forms.Label();
             this.lbLanguage = new System.Windows.Forms.Label();
@@ -172,7 +174,7 @@
             // 
             // tbSnapPath
             // 
-            this.tbSnapPath.Location = new System.Drawing.Point(236, 312);
+            this.tbSnapPath.Location = new System.Drawing.Point(236, 342);
             this.tbSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.tbSnapPath.Name = "tbSnapPath";
             this.tbSnapPath.Size = new System.Drawing.Size(335, 22);
@@ -182,7 +184,7 @@
             // lbSnapshotsavepath
             // 
             this.lbSnapshotsavepath.AutoSize = true;
-            this.lbSnapshotsavepath.Location = new System.Drawing.Point(12, 315);
+            this.lbSnapshotsavepath.Location = new System.Drawing.Point(12, 345);
             this.lbSnapshotsavepath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSnapshotsavepath.Name = "lbSnapshotsavepath";
             this.lbSnapshotsavepath.Size = new System.Drawing.Size(134, 17);
@@ -191,7 +193,7 @@
             // 
             // btSnapPath
             // 
-            this.btSnapPath.Location = new System.Drawing.Point(579, 309);
+            this.btSnapPath.Location = new System.Drawing.Point(579, 339);
             this.btSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.btSnapPath.Name = "btSnapPath";
             this.btSnapPath.Size = new System.Drawing.Size(41, 28);
@@ -219,7 +221,7 @@
             // lbCanvascursor
             // 
             this.lbCanvascursor.AutoSize = true;
-            this.lbCanvascursor.Location = new System.Drawing.Point(12, 206);
+            this.lbCanvascursor.Location = new System.Drawing.Point(12, 169);
             this.lbCanvascursor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbCanvascursor.Name = "lbCanvascursor";
             this.lbCanvascursor.Size = new System.Drawing.Size(99, 17);
@@ -233,7 +235,7 @@
             this.comboCanvasCursor.Items.AddRange(new object[] {
             "Arrow",
             "Pen tip"});
-            this.comboCanvasCursor.Location = new System.Drawing.Point(236, 199);
+            this.comboCanvasCursor.Location = new System.Drawing.Point(236, 169);
             this.comboCanvasCursor.Margin = new System.Windows.Forms.Padding(4);
             this.comboCanvasCursor.Name = "comboCanvasCursor";
             this.comboCanvasCursor.Size = new System.Drawing.Size(335, 24);
@@ -256,6 +258,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage1.Controls.Add(this.comboFont);
+            this.tabPage1.Controls.Add(this.lbFont);
             this.tabPage1.Controls.Add(this.tbCursorsize);
             this.tabPage1.Controls.Add(this.lbCursorsize);
             this.tabPage1.Controls.Add(this.lbLanguage);
@@ -284,9 +288,30 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             // 
+            // comboFont
+            // 
+            this.comboFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboFont.FormattingEnabled = true;
+            this.comboFont.Location = new System.Drawing.Point(236, 248);
+            this.comboFont.Margin = new System.Windows.Forms.Padding(4);
+            this.comboFont.Name = "comboFont";
+            this.comboFont.Size = new System.Drawing.Size(335, 24);
+            this.comboFont.TabIndex = 12;
+            this.comboFont.SelectedIndexChanged += new System.EventHandler(this.comboFont_SelectedIndexChanged);
+            // 
+            // lbFont
+            // 
+            this.lbFont.AutoSize = true;
+            this.lbFont.Location = new System.Drawing.Point(11, 248);
+            this.lbFont.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbFont.Name = "lbFont";
+            this.lbFont.Size = new System.Drawing.Size(36, 17);
+            this.lbFont.TabIndex = 11;
+            this.lbFont.Text = "Font";
+            // 
             // tbCursorsize
             // 
-            this.tbCursorsize.Location = new System.Drawing.Point(236, 249);
+            this.tbCursorsize.Location = new System.Drawing.Point(236, 205);
             this.tbCursorsize.Maximum = 4;
             this.tbCursorsize.Name = "tbCursorsize";
             this.tbCursorsize.Size = new System.Drawing.Size(335, 56);
@@ -296,7 +321,7 @@
             // lbCursorsize
             // 
             this.lbCursorsize.AutoSize = true;
-            this.lbCursorsize.Location = new System.Drawing.Point(12, 258);
+            this.lbCursorsize.Location = new System.Drawing.Point(12, 205);
             this.lbCursorsize.Name = "lbCursorsize";
             this.lbCursorsize.Size = new System.Drawing.Size(79, 17);
             this.lbCursorsize.TabIndex = 9;
@@ -305,7 +330,7 @@
             // lbLanguage
             // 
             this.lbLanguage.AutoSize = true;
-            this.lbLanguage.Location = new System.Drawing.Point(12, 160);
+            this.lbLanguage.Location = new System.Drawing.Point(12, 137);
             this.lbLanguage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbLanguage.Name = "lbLanguage";
             this.lbLanguage.Size = new System.Drawing.Size(72, 17);
@@ -327,7 +352,7 @@
             // 
             this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboLanguage.FormattingEnabled = true;
-            this.comboLanguage.Location = new System.Drawing.Point(236, 156);
+            this.comboLanguage.Location = new System.Drawing.Point(236, 137);
             this.comboLanguage.Margin = new System.Windows.Forms.Padding(4);
             this.comboLanguage.Name = "comboLanguage";
             this.comboLanguage.Size = new System.Drawing.Size(335, 24);
@@ -721,5 +746,7 @@
 		private System.Windows.Forms.Label lbLanguage;
         private System.Windows.Forms.TrackBar tbCursorsize;
         private System.Windows.Forms.Label lbCursorsize;
+        private System.Windows.Forms.ComboBox comboFont;
+        private System.Windows.Forms.Label lbFont;
     }
 }

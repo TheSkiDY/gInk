@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Ink;
+using System.Drawing.Text;
 
 namespace gInk
 {
@@ -73,6 +74,9 @@ namespace gInk
 
 		public bool LineEnabled = true;
 		public bool RectEnabled = true;
+		public bool EllipseEnabled = true;
+		public bool ArrowEnabled = true;
+		public bool TextEnabled = true;
 
 		// opcje zaawansowane
 
@@ -112,6 +116,9 @@ namespace gInk
 
 		public bool PanMode = false;
 		public bool InkVisible = true;
+		public int CurrentFontIndex = 4;
+
+		public InstalledFontCollection IFC = new InstalledFontCollection();
 
 		public enum DrawingMode
         {
@@ -120,14 +127,14 @@ namespace gInk
 			Rectangle,
 			Arrow,
 			Ellipse,
+			Text,
         };
 
 		public DrawingMode currentDrawingMode = DrawingMode.Normal;
 
-
-		public bool LineMode = false;
-		public bool RectMode = false;
-
+		public Guid TextGuid;
+		public Guid FontGuid;
+		
 		//zmienne do przechowywania wsp. punktu rozpoczęcia rysowania (do rysowania nowych grafik)
 		public int LineStartX, LineStartY, LineEndX, LineEndY;
 		public int RectStartX, RectStartY;
@@ -155,6 +162,8 @@ namespace gInk
 		//domyślny pisak
 		public int CurrentPen = 1; 
 		public int LastPen = 1;
+
+		public int PreviousPen = 1;
 		public int GlobalPenWidth = 80;
 
 		//widoczność panelu do wybierania grubości pisaka
@@ -209,6 +218,9 @@ namespace gInk
 			// ???
 			TestMessageFilter mf = new TestMessageFilter(this);
 			Application.AddMessageFilter(mf);
+
+			TextGuid = Guid.NewGuid();
+			FontGuid = Guid.NewGuid();
 
 			//FormCollection i FromDisplay są elementami programu ściśle związanymi z procesem rysowania
 			FormCollection = null;
@@ -801,6 +813,10 @@ namespace gInk
 							if (int.TryParse(sPara, out tempi))
 								CursorSize = tempi;
 							break;
+						case "FONT_INDEX":
+							if (int.TryParse(sPara, out tempi))
+								CurrentFontIndex = tempi;
+							break;
 					}
 				}
 			}
@@ -1014,6 +1030,9 @@ namespace gInk
 							break;
 						case "CURSOR_SIZE":
 							sPara = CursorSize.ToString();
+							break;
+						case "FONT_INDEX":
+							sPara = CurrentFontIndex.ToString();
 							break;
 					}
 				}
