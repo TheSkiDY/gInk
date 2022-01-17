@@ -26,6 +26,9 @@ namespace gInk
 
         Bitmap gpButtonsImage;
         Bitmap gpPenWidthImage;
+
+        Bitmap textInputPanelImage;
+
         SolidBrush TransparentBrush;
         SolidBrush SemiTransparentBrush;
 
@@ -113,6 +116,7 @@ namespace gInk
             int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
             gpButtonsImage = new Bitmap(2400, gpheight);
             gpPenWidthImage = new Bitmap(200, gpheight);
+            textInputPanelImage = new Bitmap(300, gpheight);
 
             TransparentBrush = new SolidBrush(Color.Transparent);
 
@@ -221,6 +225,18 @@ namespace gInk
 
                 gCanvus.DrawImage(gpPenWidthImage, left, top);
             }
+
+            if (Root.textInputPanelVisible)
+            {
+                top = Root.FormCollection.textInputPanel.Top;
+                height = Root.FormCollection.textInputPanel.Height;
+                left = Root.FormCollection.textInputPanel.Left;
+                width = Root.FormCollection.textInputPanel.Width;
+                if (redrawbuttons)
+                    Root.FormCollection.textInputPanel.DrawToBitmap(textInputPanelImage, new Rectangle(0, 0, width, height));
+
+                gCanvus.DrawImage(textInputPanelImage, left, top);
+            }
         }
         public void DrawButtons(Graphics g, bool redrawbuttons, bool exiting = false)
         {
@@ -262,6 +278,18 @@ namespace gInk
                     Root.FormCollection.gpPenWidth.DrawToBitmap(gpPenWidthImage, new Rectangle(0, 0, width, height));
 
                 g.DrawImage(gpPenWidthImage, left, top);
+            }
+
+            if(Root.textInputPanelVisible)
+            {
+                top = Root.FormCollection.textInputPanel.Top;
+                height = Root.FormCollection.textInputPanel.Height;
+                left = Root.FormCollection.textInputPanel.Left;
+                width = Root.FormCollection.textInputPanel.Width;
+                if (redrawbuttons)
+                    Root.FormCollection.textInputPanel.DrawToBitmap(textInputPanelImage, new Rectangle(0, 0, width, height));
+
+                g.DrawImage(textInputPanelImage, left, top);
             }
         }
 

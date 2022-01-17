@@ -117,6 +117,7 @@ namespace gInk
 		public bool PanMode = false;
 		public bool InkVisible = true;
 		public int CurrentFontIndex = 4;
+		public int FontSize = 20;
 
 		public InstalledFontCollection IFC = new InstalledFontCollection();
 
@@ -134,6 +135,7 @@ namespace gInk
 
 		public Guid TextGuid;
 		public Guid FontGuid;
+		public Guid FontSizeGuid;
 		
 		//zmienne do przechowywania wsp. punktu rozpoczęcia rysowania (do rysowania nowych grafik)
 		public int LineStartX, LineStartY, LineEndX, LineEndY;
@@ -168,6 +170,8 @@ namespace gInk
 
 		//widoczność panelu do wybierania grubości pisaka
 		public bool gpPenWidthVisible = false;
+
+		public bool textInputPanelVisible = false;
 
 		//
 		public string SnapshotFileFullPath = ""; // used to record the last snapshot file name, to select it when the balloon is clicked
@@ -817,6 +821,10 @@ namespace gInk
 							if (int.TryParse(sPara, out tempi))
 								CurrentFontIndex = tempi;
 							break;
+						case "FONT_SIZE":
+							if (int.TryParse(sPara, out tempi))
+								FontSize = tempi;
+							break;
 					}
 				}
 			}
@@ -1033,6 +1041,9 @@ namespace gInk
 							break;
 						case "FONT_INDEX":
 							sPara = CurrentFontIndex.ToString();
+							break;
+						case "FONT_SIZE":
+							sPara = FontSize.ToString();
 							break;
 					}
 				}

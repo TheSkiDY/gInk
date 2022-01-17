@@ -50,9 +50,12 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.gpPenWidth = new System.Windows.Forms.Panel();
             this.pboxPenWidthIndicator = new System.Windows.Forms.PictureBox();
+            this.textInputPanel = new System.Windows.Forms.Panel();
+            this.textInput = new System.Windows.Forms.TextBox();
             this.gpButtons.SuspendLayout();
             this.gpPenWidth.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).BeginInit();
+            this.textInputPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // gpButtons
@@ -74,10 +77,10 @@
             this.gpButtons.Controls.Add(this.btStop);
             this.gpButtons.Controls.Add(this.btClear);
             this.gpButtons.Controls.Add(this.btUndo);
-            this.gpButtons.Location = new System.Drawing.Point(43, 63);
+            this.gpButtons.Location = new System.Drawing.Point(43, 23);
             this.gpButtons.Margin = new System.Windows.Forms.Padding(2);
             this.gpButtons.Name = "gpButtons";
-            this.gpButtons.Size = new System.Drawing.Size(1130, 67);
+            this.gpButtons.Size = new System.Drawing.Size(1130, 107);
             this.gpButtons.TabIndex = 3;
             this.gpButtons.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseDown);
             this.gpButtons.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gpButtons_MouseMove);
@@ -425,12 +428,30 @@
             this.pboxPenWidthIndicator.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pboxPenWidthIndicator_MouseMove);
             this.pboxPenWidthIndicator.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pboxPenWidthIndicator_MouseUp);
             // 
+            // textInputPanel
+            // 
+            this.textInputPanel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textInputPanel.Controls.Add(this.textInput);
+            this.textInputPanel.Location = new System.Drawing.Point(559, 220);
+            this.textInputPanel.Name = "textInputPanel";
+            this.textInputPanel.Size = new System.Drawing.Size(300, 50);
+            this.textInputPanel.TabIndex = 5;
+            // 
+            // textInput
+            // 
+            this.textInput.Location = new System.Drawing.Point(3, 3);
+            this.textInput.Name = "textInput";
+            this.textInput.Size = new System.Drawing.Size(280, 22);
+            this.textInput.TabIndex = 0;
+            this.textInput.TextChanged += new System.EventHandler(this.textInput_TextChanged);
+            // 
             // FormCollection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1272, 657);
+            this.Controls.Add(this.textInputPanel);
             this.Controls.Add(this.gpPenWidth);
             this.Controls.Add(this.gpButtons);
             this.ForeColor = System.Drawing.Color.LawnGreen;
@@ -447,6 +468,8 @@
             this.gpButtons.ResumeLayout(false);
             this.gpPenWidth.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).EndInit();
+            this.textInputPanel.ResumeLayout(false);
+            this.textInputPanel.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -474,6 +497,8 @@
         public System.Windows.Forms.Button btEllipse;
         public System.Windows.Forms.Button btArrow;
         public System.Windows.Forms.Button btText;
+        public System.Windows.Forms.Panel textInputPanel;
+        public System.Windows.Forms.TextBox textInput;
     }
 }
 

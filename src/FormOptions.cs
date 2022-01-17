@@ -103,6 +103,8 @@ namespace gInk
 
             comboFont.SelectedIndex = Root.CurrentFontIndex;
 
+            numFontSize.Value = Root.FontSize;
+
             tbSnapPath.Text = Root.SnapshotBasePath;
 
             lbNote.ForeColor = Color.Black;
@@ -457,11 +459,11 @@ namespace gInk
         {
             Root.CurrentFontIndex = comboFont.SelectedIndex;
 
-            if(Root.CurrentFontIndex == 3)
-            {
-                int x = 3;
-            }
-            //MessageBox.Show(Root.CurrentFont);
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            Root.FontSize = (int)numFontSize.Value;
         }
 
         private void cbAllowHotkeyInPointer_CheckedChanged(object sender, EventArgs e)

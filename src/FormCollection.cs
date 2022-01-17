@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 //using System.Windows.Input;
 using Microsoft.Ink;
+using System.IO;
 
 namespace gInk
 {
@@ -217,9 +218,17 @@ namespace gInk
             gpPenWidth.Left = gpButtonsLeft + btPenWidth.Left - gpPenWidth.Width / 2 + btPenWidth.Width / 2;
             gpPenWidth.Top = gpButtonsTop - gpPenWidth.Height - 10;
 
+            textInputPanel.Left = gpButtonsLeft + btText.Left - textInputPanel.Width / 2 + btText.Width / 2;
+            textInputPanel.Top = gpButtonsTop - textInputPanel.Height - 10;
+
             pboxPenWidthIndicator.Top = 0;
             pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
+            
+            textInput.Width = (int)(0.9 * textInputPanel.Width);
+
             gpPenWidth.Controls.Add(pboxPenWidthIndicator);
+            textInputPanel.Controls.Add(textInput);
+           
 
             //informacje z https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.5/ms552322(v=vs.90)
 
@@ -402,7 +411,10 @@ namespace gInk
                         AddEllipse();
                         break;
                     case Root.DrawingMode.Text:
-                        AddText();
+                        if(string.IsNullOrEmpty(textInput.Text))
+                            return;
+                        else
+                            AddText();
                         break;
                     default:
                         break;
@@ -897,6 +909,11 @@ namespace gInk
                 Root.gpPenWidthVisible = false;
                 Root.UponSubPanelUpdate = true;
             }
+            else if(Root.textInputPanelVisible && Root.currentDrawingMode != Root.DrawingMode.Text)
+            {
+                Root.textInputPanelVisible = false;
+                Root.UponAllDrawingUpdate = true;
+            }
             else
                 Root.UponButtonsUpdate |= 0x2;
 
@@ -913,7 +930,9 @@ namespace gInk
             Root.ClearInk();
             SaveUndoStrokes();
             Root.SaveOptions("config.ini");
+            
             Root.gpPenWidthVisible = false;
+            Root.textInputPanelVisible = false;
 
             LastTickTime = DateTime.Now;
             ButtonsEntering = -9;
@@ -1308,6 +1327,9 @@ namespace gInk
             if (Root.gpPenWidthVisible != gpPenWidth.Visible)
                 gpPenWidth.Visible = Root.gpPenWidthVisible;
 
+            if (Root.textInputPanelVisible != textInputPanel.Visible)
+                textInputPanel.Visible = Root.textInputPanelVisible;
+;
             // hotkeys
 
             const int VK_LCONTROL = 0xA2;
@@ -1343,7 +1365,7 @@ namespace gInk
             }
 
 
-            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0)
+            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0 && !textInput.Focused)
             {
                 bool control = ((short)(GetKeyState(VK_LCONTROL) | GetKeyState(VK_RCONTROL)) & 0x8000) == 0x8000;
                 bool alt = ((short)(GetKeyState(VK_LMENU) | GetKeyState(VK_RMENU)) & 0x8000) == 0x8000;
@@ -1706,7 +1728,10 @@ namespace gInk
 
         public void AddText()
         {
-            string txt = "Test text";
+            string txt = textInput.Text;
+            if (string.IsNullOrEmpty(txt))
+                return;
+
             int x, y;
             x = Root.DrawnRect.X;
             y = Root.DrawnRect.Y;
@@ -1721,10 +1746,16 @@ namespace gInk
             textStroke.DrawingAttributes.Width = 0;
             textStroke.ExtendedProperties.Add(Root.TextGuid,txt);
             textStroke.ExtendedProperties.Add(Root.FontGuid,Root.CurrentFontIndex);
+            textStroke.ExtendedProperties.Add(Root.FontSizeGuid, Root.FontSize);
 
             IC.Ink.Strokes.Add(textStroke);
+            textInput.Clear();
         }
 
+        private void textInput_TextChanged(object sender, EventArgs e)
+        {
+            Root.UponAllDrawingUpdate = true;
+        }
 
         private void btDraw_Click(object sender, EventArgs e)
         {
@@ -1794,6 +1825,7 @@ namespace gInk
                 return;
             }
 
+            Root.textInputPanelVisible = true;
             Root.currentDrawingMode = Root.DrawingMode.Text;
             SelectPen(Root.PreviousPen);
         }

@@ -87,11 +87,14 @@
             this.hiUndo = new gInk.HotkeyInputBox();
             this.hiEraser = new gInk.HotkeyInputBox();
             this.hiGlobal = new gInk.HotkeyInputBox();
+            this.lbFontSize = new System.Windows.Forms.Label();
+            this.numFontSize = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // cbEraserEnabled
@@ -258,6 +261,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage1.Controls.Add(this.numFontSize);
+            this.tabPage1.Controls.Add(this.lbFontSize);
             this.tabPage1.Controls.Add(this.comboFont);
             this.tabPage1.Controls.Add(this.lbFont);
             this.tabPage1.Controls.Add(this.tbCursorsize);
@@ -672,6 +677,29 @@
             this.hiGlobal.Text = "None";
             this.hiGlobal.OnHotkeyChanged += new System.EventHandler(this.hi_OnHotkeyChanged);
             // 
+            // lbFontSize
+            // 
+            this.lbFontSize.AutoSize = true;
+            this.lbFontSize.Location = new System.Drawing.Point(12, 291);
+            this.lbFontSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbFontSize.Name = "lbFontSize";
+            this.lbFontSize.Size = new System.Drawing.Size(36, 17);
+            this.lbFontSize.TabIndex = 13;
+            this.lbFontSize.Text = "Font";
+            // 
+            // numFontSize
+            // 
+            this.numFontSize.Location = new System.Drawing.Point(434, 291);
+            this.numFontSize.Name = "numFontSize";
+            this.numFontSize.Size = new System.Drawing.Size(137, 22);
+            this.numFontSize.TabIndex = 14;
+            this.numFontSize.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numFontSize.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
             // FormOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -693,6 +721,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFontSize)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -748,5 +777,7 @@
         private System.Windows.Forms.Label lbCursorsize;
         private System.Windows.Forms.ComboBox comboFont;
         private System.Windows.Forms.Label lbFont;
+        private System.Windows.Forms.NumericUpDown numFontSize;
+        private System.Windows.Forms.Label lbFontSize;
     }
 }
