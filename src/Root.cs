@@ -77,6 +77,8 @@ namespace gInk
 		public bool EllipseEnabled = true;
 		public bool ArrowEnabled = true;
 		public bool TextEnabled = true;
+		public bool HandDrawnEnabled = true;
+
 
 		// opcje zaawansowane
 
@@ -99,6 +101,13 @@ namespace gInk
 		public Hotkey Hotkey_Snap = new Hotkey();
 		public Hotkey Hotkey_Clear = new Hotkey();
 
+		public Hotkey Hotkey_Draw = new Hotkey();
+		public Hotkey Hotkey_Line = new Hotkey();
+		public Hotkey Hotkey_Arrow = new Hotkey();
+		public Hotkey Hotkey_Rect = new Hotkey();
+		public Hotkey Hotkey_Ellipse = new Hotkey();
+		public Hotkey Hotkey_Text = new Hotkey();
+
 		//kolejne opcje
 		public bool EraserMode = false;
 		public bool Docked = false;
@@ -119,6 +128,10 @@ namespace gInk
 		public int CurrentFontIndex = 4;
 		public int FontSize = 20;
 
+		public bool FitFontToRect = true;
+		public bool FixedArrowLength = true;
+		public int ArrowLength = 10;
+
 		public InstalledFontCollection IFC = new InstalledFontCollection();
 
 		public enum DrawingMode
@@ -136,10 +149,10 @@ namespace gInk
 		public Guid TextGuid;
 		public Guid FontGuid;
 		public Guid FontSizeGuid;
-		
+
 		//zmienne do przechowywania wsp. punktu rozpoczęcia rysowania (do rysowania nowych grafik)
-		public int LineStartX, LineStartY, LineEndX, LineEndY;
-		public int RectStartX, RectStartY;
+		public Line DrawnLine;
+		public Point RectStart;
 		public Rectangle DrawnRect;
 
 		public Ink[] UndoStrokes;
@@ -729,6 +742,24 @@ namespace gInk
 						case "HOTKEY_CLEAR":
 							Hotkey_Clear.Parse(sPara);
 							break;
+						case "HOTKEY_DRAW":
+							Hotkey_Draw.Parse(sPara);
+							break;
+						case "HOTKEY_LINE":
+							Hotkey_Line.Parse(sPara);
+							break;
+						case "HOTKEY_ARROW":
+							Hotkey_Arrow.Parse(sPara);
+							break;
+						case "HOTKEY_RECT":
+							Hotkey_Rect.Parse(sPara);
+							break;
+						case "HOTKEY_ELLIPSE":
+							Hotkey_Ellipse.Parse(sPara);
+							break;
+						case "HOTKEY_TEXT":
+							Hotkey_Text.Parse(sPara);
+							break;
 
 						case "WHITE_TRAY_ICON":
 							if (sPara.ToUpper() == "TRUE" || sPara == "1" || sPara.ToUpper() == "ON")
@@ -824,6 +855,42 @@ namespace gInk
 						case "FONT_SIZE":
 							if (int.TryParse(sPara, out tempi))
 								FontSize = tempi;
+							break;
+						case "ARROW_LENGTH":
+							if (int.TryParse(sPara, out tempi))
+								ArrowLength = tempi;
+							break;
+						case "TEXT_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								TextEnabled = false;
+							break;
+						case "ELLIPSE_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								EllipseEnabled = false;
+							break;
+						case "RECTANGLE_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								RectEnabled = false;
+							break;
+						case "ARROW_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								ArrowEnabled = false;
+							break;
+						case "LINE_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								LineEnabled = false;
+							break;
+						case "HANDDRAWN_ICON":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								HandDrawnEnabled = false;
+							break;
+						case "FONT_FIT":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								FitFontToRect = false;
+							break;
+						case "FIXED_ARROW":
+							if (sPara.ToUpper() == "FALSE" || sPara == "0" || sPara.ToUpper() == "OFF")
+								FixedArrowLength = false;
 							break;
 					}
 				}
@@ -940,6 +1007,24 @@ namespace gInk
 						case "HOTKEY_CLEAR":
 							sPara = Hotkey_Clear.ToString();
 							break;
+						case "HOTKEY_DRAW":
+							sPara = Hotkey_Draw.ToString();
+							break;
+						case "HOTKEY_LINE":
+							sPara = Hotkey_Line.ToString();
+							break;
+						case "HOTKEY_ARROW":
+							sPara = Hotkey_Arrow.ToString();
+							break;
+						case "HOTKEY_RECT":
+							sPara = Hotkey_Rect.ToString();
+							break;
+						case "HOTKEY_ELLIPSE":
+							sPara = Hotkey_Ellipse.ToString();
+							break;
+						case "HOTKEY_TEXT":
+							sPara = Hotkey_Text.ToString();
+							break;
 
 						case "WHITE_TRAY_ICON":
 							if (WhiteTrayIcon)
@@ -1044,6 +1129,57 @@ namespace gInk
 							break;
 						case "FONT_SIZE":
 							sPara = FontSize.ToString();
+							break;
+						case "ARROW_LENGTH":
+							sPara = ArrowLength.ToString();
+							break;
+						case "TEXT_ICON":
+							if (TextEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "ELLIPSE_ICON":
+							if (EllipseEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "RECTANGLE_ICON":
+							if (RectEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "ARROW_ICON":
+							if (ArrowEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "LINE_ICON":
+							if (LineEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "HANDDRRAWN_ICON":
+							if (HandDrawnEnabled)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "FONT_FIT":
+							if (FitFontToRect)
+								sPara = "True";
+							else
+								sPara = "False";
+							break;
+						case "FIXED_ARROW":
+							if (FixedArrowLength)
+								sPara = "True";
+							else
+								sPara = "False";
 							break;
 					}
 				}

@@ -89,6 +89,23 @@ namespace gInk
                 cbPanEnabled.Checked = true;
             if (Root.InkVisibleEnabled)
                 cbInkVisibleEnabled.Checked = true;
+            if (Root.HandDrawnEnabled)
+                cb_HandDrawnEnabled.Checked = true;
+            if (Root.LineEnabled)
+                cb_LineEnabled.Checked = true;
+            if (Root.ArrowEnabled)
+                cb_ArrowEnabled.Checked = true;
+            if (Root.RectEnabled)
+                cb_RectEnabled.Checked = true;
+            if (Root.EllipseEnabled)
+                cb_EllipseEnabled.Checked = true;
+            if (Root.TextEnabled)
+                cb_TextEnabled.Checked = true;
+
+            if (Root.FitFontToRect)
+                cbFontFit.Checked = true;
+            if (Root.FixedArrowLength)
+                cbFixedArrow.Checked = true;
 
             if (Root.WhiteTrayIcon)
                 cbWhiteIcon.Checked = true;
@@ -104,6 +121,8 @@ namespace gInk
             comboFont.SelectedIndex = Root.CurrentFontIndex;
 
             numFontSize.Value = Root.FontSize;
+
+            numArrowSize.Value = Root.ArrowLength;
 
             tbSnapPath.Text = Root.SnapshotBasePath;
 
@@ -212,6 +231,13 @@ namespace gInk
             hiRedo.Hotkey = Root.Hotkey_Redo;
             hiClear.Hotkey = Root.Hotkey_Clear;
 
+            hiDraw.Hotkey = Root.Hotkey_Draw;
+            hiLine.Hotkey = Root.Hotkey_Line;
+            hiArrow.Hotkey = Root.Hotkey_Arrow;
+            hiRect.Hotkey = Root.Hotkey_Rect;
+            hiEllipse.Hotkey = Root.Hotkey_Ellipse;
+            hiText.Hotkey = Root.Hotkey_Text;
+
             FormOptions_LocalReload();
         }
 
@@ -224,11 +250,17 @@ namespace gInk
             this.lbLanguage.Text = Root.Local.OptionsGeneralLanguage;
             this.lbCanvascursor.Text = Root.Local.OptionsGeneralCanvascursor;
             this.lbCursorsize.Text = Root.Local.OptionsGeneralCursorsize;
+            this.lbFont.Text = Root.Local.OptionsGeneralFont;
+            this.lbFontSize.Text = Root.Local.OptionsGeneralFontSize;
             this.lbSnapshotsavepath.Text = Root.Local.OptionsGeneralSnapshotsavepath;
             this.cbWhiteIcon.Text = Root.Local.OptionsGeneralWhitetrayicon;
             this.cbAllowDragging.Text = Root.Local.OptionsGeneralAllowdragging;
             this.lbNote.Text = Root.Local.OptionsGeneralNotePenwidth;
 
+            this.lbArrowLength.Text = Root.Local.OptionsGeneralArrowLength;
+            this.cbFixedArrow.Text = Root.Local.OptionsGeneralAllowDynamicArrowLength;
+            this.cbFontFit.Text = Root.Local.OptionsGeneralFixedFont;
+            
             this.lbHkClear.Text = Root.Local.ButtonNameClear;
             this.lbHkEraser.Text = Root.Local.ButtonNameErasor;
             this.lbHkInkVisible.Text = Root.Local.ButtonNameInkVisible;
@@ -239,6 +271,13 @@ namespace gInk
             this.lbHkUndo.Text = Root.Local.ButtonNameUndo;
             this.lbGlobalHotkey.Text = Root.Local.OptionsHotkeysglobal;
             this.cbAllowHotkeyInPointer.Text = Root.Local.OptionsHotkeysEnableinpointer;
+
+            this.lbHkDraw.Text = Root.Local.ButtonNameDraw;
+            this.lbHkLine.Text = Root.Local.ButtonNameLine;
+            this.lbHkArrow.Text = Root.Local.ButtonNameArrow;
+            this.lbHkRect.Text = Root.Local.ButtonNameRect;
+            this.lbHkEllipse.Text = Root.Local.ButtonNameEllipse;
+            this.lbHkText.Text = Root.Local.ButtonNameText;
 
             this.comboCanvasCursor.Items[0] = Root.Local.OptionsGeneralCanvascursorArrow;
             this.comboCanvasCursor.Items[1] = Root.Local.OptionsGeneralCanvascursorPentip;
@@ -270,6 +309,21 @@ namespace gInk
             string ln = Root.Local.GetLanguagenameByFilename(Root.Local.CurrentLanguageFile);
             if (comboLanguage.Items.Contains(ln))
                 comboLanguage.SelectedIndex = comboLanguage.Items.IndexOf(ln);
+
+            if (Root.CanvasCursor == 1)
+                tbCursorsize.Enabled = false;
+            else
+                tbCursorsize.Enabled = true;
+
+            if (Root.FixedArrowLength)
+                numArrowSize.Enabled = true;
+            else
+                numArrowSize.Enabled = false;
+
+            if (Root.FitFontToRect)
+                numFontSize.Enabled = false;
+            else
+                numFontSize.Enabled = true;
 
         }
 
@@ -464,6 +518,62 @@ namespace gInk
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             Root.FontSize = (int)numFontSize.Value;
+        }
+
+        private void cb_TextEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.TextEnabled = cb_TextEnabled.Checked;
+        }
+
+        private void cb_EllipseEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.EllipseEnabled = cb_EllipseEnabled.Checked;
+        }
+
+        private void cb_RectEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.RectEnabled = cb_RectEnabled.Checked;
+        }
+
+        private void cb_ArrowEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.ArrowEnabled = cb_ArrowEnabled.Checked;
+        }
+
+        private void cb_LineEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.LineEnabled = cb_LineEnabled.Checked;
+        }
+
+        private void cb_HandDrawnEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.HandDrawnEnabled = cb_HandDrawnEnabled.Checked;
+        }
+
+        private void cbFontFit_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.FitFontToRect = cbFontFit.Checked;
+
+            if (Root.FitFontToRect)
+                numFontSize.Enabled = false;
+            else
+                numFontSize.Enabled = true;
+
+        }
+
+        private void cbFixedArrow_CheckedChanged(object sender, EventArgs e)
+        {
+            Root.FixedArrowLength = cbFixedArrow.Checked;
+
+            if (Root.FixedArrowLength)
+                numArrowSize.Enabled = true;
+            else
+                numArrowSize.Enabled = false;
+        }
+
+        private void numArrowSize_ValueChanged(object sender, EventArgs e)
+        {
+            Root.ArrowLength = (int)numArrowSize.Value;
         }
 
         private void cbAllowHotkeyInPointer_CheckedChanged(object sender, EventArgs e)

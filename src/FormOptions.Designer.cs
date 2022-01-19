@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptions));
             gInk.Hotkey hotkey1 = new gInk.Hotkey();
             gInk.Hotkey hotkey2 = new gInk.Hotkey();
             gInk.Hotkey hotkey3 = new gInk.Hotkey();
@@ -38,6 +39,12 @@
             gInk.Hotkey hotkey7 = new gInk.Hotkey();
             gInk.Hotkey hotkey8 = new gInk.Hotkey();
             gInk.Hotkey hotkey9 = new gInk.Hotkey();
+            gInk.Hotkey hotkey10 = new gInk.Hotkey();
+            gInk.Hotkey hotkey11 = new gInk.Hotkey();
+            gInk.Hotkey hotkey12 = new gInk.Hotkey();
+            gInk.Hotkey hotkey13 = new gInk.Hotkey();
+            gInk.Hotkey hotkey14 = new gInk.Hotkey();
+            gInk.Hotkey hotkey15 = new gInk.Hotkey();
             this.cbEraserEnabled = new System.Windows.Forms.CheckBox();
             this.cbPointerEnabled = new System.Windows.Forms.CheckBox();
             this.cbSnapEnabled = new System.Windows.Forms.CheckBox();
@@ -56,18 +63,37 @@
             this.comboCanvasCursor = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cbFixedArrow = new System.Windows.Forms.CheckBox();
+            this.numArrowSize = new System.Windows.Forms.NumericUpDown();
+            this.lbArrowLength = new System.Windows.Forms.Label();
+            this.cbFontFit = new System.Windows.Forms.CheckBox();
+            this.cb_HandDrawnEnabled = new System.Windows.Forms.CheckBox();
+            this.cb_LineEnabled = new System.Windows.Forms.CheckBox();
+            this.cb_ArrowEnabled = new System.Windows.Forms.CheckBox();
+            this.cb_RectEnabled = new System.Windows.Forms.CheckBox();
+            this.cb_EllipseEnabled = new System.Windows.Forms.CheckBox();
+            this.cb_TextEnabled = new System.Windows.Forms.CheckBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.numFontSize = new System.Windows.Forms.NumericUpDown();
+            this.lbFontSize = new System.Windows.Forms.Label();
             this.comboFont = new System.Windows.Forms.ComboBox();
             this.lbFont = new System.Windows.Forms.Label();
             this.tbCursorsize = new System.Windows.Forms.TrackBar();
             this.lbCursorsize = new System.Windows.Forms.Label();
             this.lbLanguage = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.cbInkVisibleEnabled = new System.Windows.Forms.CheckBox();
             this.cbPanEnabled = new System.Windows.Forms.CheckBox();
             this.cbAllowDragging = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.hiText = new gInk.HotkeyInputBox();
+            this.lbHkText = new System.Windows.Forms.Label();
+            this.lbHkEllipse = new System.Windows.Forms.Label();
+            this.lbHkRect = new System.Windows.Forms.Label();
+            this.lbHkArrow = new System.Windows.Forms.Label();
+            this.lbHkLine = new System.Windows.Forms.Label();
+            this.lbHkDraw = new System.Windows.Forms.Label();
             this.cbAllowHotkeyInPointer = new System.Windows.Forms.CheckBox();
             this.lbHkInkVisible = new System.Windows.Forms.Label();
             this.lbHkSnapshot = new System.Windows.Forms.Label();
@@ -78,6 +104,11 @@
             this.lbHkUndo = new System.Windows.Forms.Label();
             this.lbHkEraser = new System.Windows.Forms.Label();
             this.lbGlobalHotkey = new System.Windows.Forms.Label();
+            this.hiEllipse = new gInk.HotkeyInputBox();
+            this.hiRect = new gInk.HotkeyInputBox();
+            this.hiArrow = new gInk.HotkeyInputBox();
+            this.hiLine = new gInk.HotkeyInputBox();
+            this.hiDraw = new gInk.HotkeyInputBox();
             this.hiInkVisible = new gInk.HotkeyInputBox();
             this.hiSnapshot = new gInk.HotkeyInputBox();
             this.hiClear = new gInk.HotkeyInputBox();
@@ -87,20 +118,19 @@
             this.hiUndo = new gInk.HotkeyInputBox();
             this.hiEraser = new gInk.HotkeyInputBox();
             this.hiGlobal = new gInk.HotkeyInputBox();
-            this.lbFontSize = new System.Windows.Forms.Label();
-            this.numFontSize = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numArrowSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFontSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbEraserEnabled
             // 
             this.cbEraserEnabled.AutoSize = true;
-            this.cbEraserEnabled.Location = new System.Drawing.Point(52, 100);
+            this.cbEraserEnabled.Location = new System.Drawing.Point(294, 62);
             this.cbEraserEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbEraserEnabled.Name = "cbEraserEnabled";
             this.cbEraserEnabled.Size = new System.Drawing.Size(18, 17);
@@ -111,7 +141,7 @@
             // cbPointerEnabled
             // 
             this.cbPointerEnabled.AutoSize = true;
-            this.cbPointerEnabled.Location = new System.Drawing.Point(183, 100);
+            this.cbPointerEnabled.Location = new System.Drawing.Point(368, 62);
             this.cbPointerEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbPointerEnabled.Name = "cbPointerEnabled";
             this.cbPointerEnabled.Size = new System.Drawing.Size(18, 17);
@@ -122,7 +152,7 @@
             // cbSnapEnabled
             // 
             this.cbSnapEnabled.AutoSize = true;
-            this.cbSnapEnabled.Location = new System.Drawing.Point(434, 101);
+            this.cbSnapEnabled.Location = new System.Drawing.Point(515, 62);
             this.cbSnapEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbSnapEnabled.Name = "cbSnapEnabled";
             this.cbSnapEnabled.Size = new System.Drawing.Size(18, 17);
@@ -133,7 +163,7 @@
             // cbUndoEnabled
             // 
             this.cbUndoEnabled.AutoSize = true;
-            this.cbUndoEnabled.Location = new System.Drawing.Point(503, 101);
+            this.cbUndoEnabled.Location = new System.Drawing.Point(553, 62);
             this.cbUndoEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbUndoEnabled.Name = "cbUndoEnabled";
             this.cbUndoEnabled.Size = new System.Drawing.Size(18, 17);
@@ -144,7 +174,7 @@
             // cbClearEnabled
             // 
             this.cbClearEnabled.AutoSize = true;
-            this.cbClearEnabled.Location = new System.Drawing.Point(568, 101);
+            this.cbClearEnabled.Location = new System.Drawing.Point(591, 62);
             this.cbClearEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbClearEnabled.Name = "cbClearEnabled";
             this.cbClearEnabled.Size = new System.Drawing.Size(18, 17);
@@ -155,7 +185,7 @@
             // cbWidthEnabled
             // 
             this.cbWidthEnabled.AutoSize = true;
-            this.cbWidthEnabled.Location = new System.Drawing.Point(296, 102);
+            this.cbWidthEnabled.Location = new System.Drawing.Point(434, 62);
             this.cbWidthEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbWidthEnabled.Name = "cbWidthEnabled";
             this.cbWidthEnabled.Size = new System.Drawing.Size(18, 17);
@@ -166,7 +196,7 @@
             // cbWhiteIcon
             // 
             this.cbWhiteIcon.AutoSize = true;
-            this.cbWhiteIcon.Location = new System.Drawing.Point(14, 376);
+            this.cbWhiteIcon.Location = new System.Drawing.Point(14, 411);
             this.cbWhiteIcon.Margin = new System.Windows.Forms.Padding(4);
             this.cbWhiteIcon.Name = "cbWhiteIcon";
             this.cbWhiteIcon.Size = new System.Drawing.Size(121, 21);
@@ -177,7 +207,7 @@
             // 
             // tbSnapPath
             // 
-            this.tbSnapPath.Location = new System.Drawing.Point(236, 342);
+            this.tbSnapPath.Location = new System.Drawing.Point(236, 366);
             this.tbSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.tbSnapPath.Name = "tbSnapPath";
             this.tbSnapPath.Size = new System.Drawing.Size(335, 22);
@@ -187,7 +217,7 @@
             // lbSnapshotsavepath
             // 
             this.lbSnapshotsavepath.AutoSize = true;
-            this.lbSnapshotsavepath.Location = new System.Drawing.Point(12, 345);
+            this.lbSnapshotsavepath.Location = new System.Drawing.Point(12, 369);
             this.lbSnapshotsavepath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbSnapshotsavepath.Name = "lbSnapshotsavepath";
             this.lbSnapshotsavepath.Size = new System.Drawing.Size(134, 17);
@@ -196,7 +226,7 @@
             // 
             // btSnapPath
             // 
-            this.btSnapPath.Location = new System.Drawing.Point(579, 339);
+            this.btSnapPath.Location = new System.Drawing.Point(579, 363);
             this.btSnapPath.Margin = new System.Windows.Forms.Padding(4);
             this.btSnapPath.Name = "btSnapPath";
             this.btSnapPath.Size = new System.Drawing.Size(41, 28);
@@ -208,7 +238,7 @@
             // lbNote
             // 
             this.lbNote.AutoSize = true;
-            this.lbNote.Location = new System.Drawing.Point(11, 446);
+            this.lbNote.Location = new System.Drawing.Point(12, 507);
             this.lbNote.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbNote.Name = "lbNote";
             this.lbNote.Size = new System.Drawing.Size(418, 17);
@@ -261,6 +291,17 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage1.Controls.Add(this.cbFixedArrow);
+            this.tabPage1.Controls.Add(this.numArrowSize);
+            this.tabPage1.Controls.Add(this.lbArrowLength);
+            this.tabPage1.Controls.Add(this.cbFontFit);
+            this.tabPage1.Controls.Add(this.cb_HandDrawnEnabled);
+            this.tabPage1.Controls.Add(this.cb_LineEnabled);
+            this.tabPage1.Controls.Add(this.cb_ArrowEnabled);
+            this.tabPage1.Controls.Add(this.cb_RectEnabled);
+            this.tabPage1.Controls.Add(this.cb_EllipseEnabled);
+            this.tabPage1.Controls.Add(this.cb_TextEnabled);
+            this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.numFontSize);
             this.tabPage1.Controls.Add(this.lbFontSize);
             this.tabPage1.Controls.Add(this.comboFont);
@@ -268,7 +309,6 @@
             this.tabPage1.Controls.Add(this.tbCursorsize);
             this.tabPage1.Controls.Add(this.lbCursorsize);
             this.tabPage1.Controls.Add(this.lbLanguage);
-            this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.comboLanguage);
             this.tabPage1.Controls.Add(this.comboCanvasCursor);
             this.tabPage1.Controls.Add(this.cbInkVisibleEnabled);
@@ -292,6 +332,156 @@
             this.tabPage1.Size = new System.Drawing.Size(1261, 535);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
+            // 
+            // cbFixedArrow
+            // 
+            this.cbFixedArrow.AutoSize = true;
+            this.cbFixedArrow.Location = new System.Drawing.Point(356, 324);
+            this.cbFixedArrow.Margin = new System.Windows.Forms.Padding(4);
+            this.cbFixedArrow.Name = "cbFixedArrow";
+            this.cbFixedArrow.Size = new System.Drawing.Size(145, 21);
+            this.cbFixedArrow.TabIndex = 25;
+            this.cbFixedArrow.Text = "Fixed arrow length";
+            this.cbFixedArrow.UseVisualStyleBackColor = true;
+            this.cbFixedArrow.CheckedChanged += new System.EventHandler(this.cbFixedArrow_CheckedChanged);
+            // 
+            // numArrowSize
+            // 
+            this.numArrowSize.Location = new System.Drawing.Point(236, 324);
+            this.numArrowSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numArrowSize.Name = "numArrowSize";
+            this.numArrowSize.Size = new System.Drawing.Size(76, 22);
+            this.numArrowSize.TabIndex = 24;
+            this.numArrowSize.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numArrowSize.ValueChanged += new System.EventHandler(this.numArrowSize_ValueChanged);
+            // 
+            // lbArrowLength
+            // 
+            this.lbArrowLength.AutoSize = true;
+            this.lbArrowLength.Location = new System.Drawing.Point(12, 324);
+            this.lbArrowLength.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbArrowLength.Name = "lbArrowLength";
+            this.lbArrowLength.Size = new System.Drawing.Size(87, 17);
+            this.lbArrowLength.TabIndex = 23;
+            this.lbArrowLength.Text = "Arrow length";
+            // 
+            // cbFontFit
+            // 
+            this.cbFontFit.AutoSize = true;
+            this.cbFontFit.Location = new System.Drawing.Point(356, 291);
+            this.cbFontFit.Margin = new System.Windows.Forms.Padding(4);
+            this.cbFontFit.Name = "cbFontFit";
+            this.cbFontFit.Size = new System.Drawing.Size(159, 21);
+            this.cbFontFit.TabIndex = 22;
+            this.cbFontFit.Text = "Fit font automatically";
+            this.cbFontFit.UseVisualStyleBackColor = true;
+            this.cbFontFit.CheckedChanged += new System.EventHandler(this.cbFontFit_CheckedChanged);
+            // 
+            // cb_HandDrawnEnabled
+            // 
+            this.cb_HandDrawnEnabled.AutoSize = true;
+            this.cb_HandDrawnEnabled.Location = new System.Drawing.Point(235, 61);
+            this.cb_HandDrawnEnabled.Name = "cb_HandDrawnEnabled";
+            this.cb_HandDrawnEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_HandDrawnEnabled.TabIndex = 21;
+            this.cb_HandDrawnEnabled.UseVisualStyleBackColor = true;
+            this.cb_HandDrawnEnabled.CheckedChanged += new System.EventHandler(this.cb_HandDrawnEnabled_CheckedChanged);
+            // 
+            // cb_LineEnabled
+            // 
+            this.cb_LineEnabled.AutoSize = true;
+            this.cb_LineEnabled.Location = new System.Drawing.Point(195, 61);
+            this.cb_LineEnabled.Name = "cb_LineEnabled";
+            this.cb_LineEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_LineEnabled.TabIndex = 20;
+            this.cb_LineEnabled.UseVisualStyleBackColor = true;
+            this.cb_LineEnabled.CheckedChanged += new System.EventHandler(this.cb_LineEnabled_CheckedChanged);
+            // 
+            // cb_ArrowEnabled
+            // 
+            this.cb_ArrowEnabled.AutoSize = true;
+            this.cb_ArrowEnabled.Location = new System.Drawing.Point(155, 61);
+            this.cb_ArrowEnabled.Name = "cb_ArrowEnabled";
+            this.cb_ArrowEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_ArrowEnabled.TabIndex = 19;
+            this.cb_ArrowEnabled.UseVisualStyleBackColor = true;
+            this.cb_ArrowEnabled.CheckedChanged += new System.EventHandler(this.cb_ArrowEnabled_CheckedChanged);
+            // 
+            // cb_RectEnabled
+            // 
+            this.cb_RectEnabled.AutoSize = true;
+            this.cb_RectEnabled.Location = new System.Drawing.Point(115, 61);
+            this.cb_RectEnabled.Name = "cb_RectEnabled";
+            this.cb_RectEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_RectEnabled.TabIndex = 18;
+            this.cb_RectEnabled.UseVisualStyleBackColor = true;
+            this.cb_RectEnabled.CheckedChanged += new System.EventHandler(this.cb_RectEnabled_CheckedChanged);
+            // 
+            // cb_EllipseEnabled
+            // 
+            this.cb_EllipseEnabled.AutoSize = true;
+            this.cb_EllipseEnabled.Location = new System.Drawing.Point(75, 61);
+            this.cb_EllipseEnabled.Name = "cb_EllipseEnabled";
+            this.cb_EllipseEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_EllipseEnabled.TabIndex = 17;
+            this.cb_EllipseEnabled.UseVisualStyleBackColor = true;
+            this.cb_EllipseEnabled.CheckedChanged += new System.EventHandler(this.cb_EllipseEnabled_CheckedChanged);
+            // 
+            // cb_TextEnabled
+            // 
+            this.cb_TextEnabled.AutoSize = true;
+            this.cb_TextEnabled.Location = new System.Drawing.Point(35, 61);
+            this.cb_TextEnabled.Name = "cb_TextEnabled";
+            this.cb_TextEnabled.Size = new System.Drawing.Size(18, 17);
+            this.cb_TextEnabled.TabIndex = 16;
+            this.cb_TextEnabled.UseVisualStyleBackColor = true;
+            this.cb_TextEnabled.CheckedChanged += new System.EventHandler(this.cb_TextEnabled_CheckedChanged);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(15, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(618, 43);
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            // 
+            // numFontSize
+            // 
+            this.numFontSize.Location = new System.Drawing.Point(236, 291);
+            this.numFontSize.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numFontSize.Name = "numFontSize";
+            this.numFontSize.Size = new System.Drawing.Size(76, 22);
+            this.numFontSize.TabIndex = 14;
+            this.numFontSize.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numFontSize.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // lbFontSize
+            // 
+            this.lbFontSize.AutoSize = true;
+            this.lbFontSize.Location = new System.Drawing.Point(12, 291);
+            this.lbFontSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbFontSize.Name = "lbFontSize";
+            this.lbFontSize.Size = new System.Drawing.Size(65, 17);
+            this.lbFontSize.TabIndex = 13;
+            this.lbFontSize.Text = "Font size";
             // 
             // comboFont
             // 
@@ -342,17 +532,6 @@
             this.lbLanguage.TabIndex = 8;
             this.lbLanguage.Text = "Language";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::gInk.Properties.Resources.paneloption;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(11, 18);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(623, 65);
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
-            // 
             // comboLanguage
             // 
             this.comboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -367,7 +546,7 @@
             // cbInkVisibleEnabled
             // 
             this.cbInkVisibleEnabled.AutoSize = true;
-            this.cbInkVisibleEnabled.Location = new System.Drawing.Point(366, 101);
+            this.cbInkVisibleEnabled.Location = new System.Drawing.Point(477, 62);
             this.cbInkVisibleEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbInkVisibleEnabled.Name = "cbInkVisibleEnabled";
             this.cbInkVisibleEnabled.Size = new System.Drawing.Size(18, 17);
@@ -378,7 +557,7 @@
             // cbPanEnabled
             // 
             this.cbPanEnabled.AutoSize = true;
-            this.cbPanEnabled.Location = new System.Drawing.Point(116, 100);
+            this.cbPanEnabled.Location = new System.Drawing.Point(331, 62);
             this.cbPanEnabled.Margin = new System.Windows.Forms.Padding(4);
             this.cbPanEnabled.Name = "cbPanEnabled";
             this.cbPanEnabled.Size = new System.Drawing.Size(18, 17);
@@ -389,7 +568,7 @@
             // cbAllowDragging
             // 
             this.cbAllowDragging.AutoSize = true;
-            this.cbAllowDragging.Location = new System.Drawing.Point(14, 405);
+            this.cbAllowDragging.Location = new System.Drawing.Point(307, 411);
             this.cbAllowDragging.Margin = new System.Windows.Forms.Padding(4);
             this.cbAllowDragging.Name = "cbAllowDragging";
             this.cbAllowDragging.Size = new System.Drawing.Size(264, 21);
@@ -412,6 +591,13 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabPage3.Controls.Add(this.hiText);
+            this.tabPage3.Controls.Add(this.lbHkText);
+            this.tabPage3.Controls.Add(this.lbHkEllipse);
+            this.tabPage3.Controls.Add(this.lbHkRect);
+            this.tabPage3.Controls.Add(this.lbHkArrow);
+            this.tabPage3.Controls.Add(this.lbHkLine);
+            this.tabPage3.Controls.Add(this.lbHkDraw);
             this.tabPage3.Controls.Add(this.cbAllowHotkeyInPointer);
             this.tabPage3.Controls.Add(this.lbHkInkVisible);
             this.tabPage3.Controls.Add(this.lbHkSnapshot);
@@ -422,6 +608,11 @@
             this.tabPage3.Controls.Add(this.lbHkUndo);
             this.tabPage3.Controls.Add(this.lbHkEraser);
             this.tabPage3.Controls.Add(this.lbGlobalHotkey);
+            this.tabPage3.Controls.Add(this.hiEllipse);
+            this.tabPage3.Controls.Add(this.hiRect);
+            this.tabPage3.Controls.Add(this.hiArrow);
+            this.tabPage3.Controls.Add(this.hiLine);
+            this.tabPage3.Controls.Add(this.hiDraw);
             this.tabPage3.Controls.Add(this.hiInkVisible);
             this.tabPage3.Controls.Add(this.hiSnapshot);
             this.tabPage3.Controls.Add(this.hiClear);
@@ -437,6 +628,80 @@
             this.tabPage3.Size = new System.Drawing.Size(1261, 535);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Hotkeys";
+            // 
+            // hiText
+            // 
+            this.hiText.BackColor = System.Drawing.Color.White;
+            this.hiText.ExternalConflictFlag = false;
+            this.hiText.Hotkey = hotkey1;
+            this.hiText.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiText.Location = new System.Drawing.Point(572, 492);
+            this.hiText.Margin = new System.Windows.Forms.Padding(4);
+            this.hiText.Name = "hiText";
+            this.hiText.RequireModifier = false;
+            this.hiText.Size = new System.Drawing.Size(60, 22);
+            this.hiText.TabIndex = 30;
+            this.hiText.Text = "None";
+            // 
+            // lbHkText
+            // 
+            this.lbHkText.AutoSize = true;
+            this.lbHkText.Location = new System.Drawing.Point(477, 492);
+            this.lbHkText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkText.Name = "lbHkText";
+            this.lbHkText.Size = new System.Drawing.Size(35, 17);
+            this.lbHkText.TabIndex = 29;
+            this.lbHkText.Text = "Text";
+            // 
+            // lbHkEllipse
+            // 
+            this.lbHkEllipse.AutoSize = true;
+            this.lbHkEllipse.Location = new System.Drawing.Point(477, 462);
+            this.lbHkEllipse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkEllipse.Name = "lbHkEllipse";
+            this.lbHkEllipse.Size = new System.Drawing.Size(49, 17);
+            this.lbHkEllipse.TabIndex = 27;
+            this.lbHkEllipse.Text = "Ellipse";
+            // 
+            // lbHkRect
+            // 
+            this.lbHkRect.AutoSize = true;
+            this.lbHkRect.Location = new System.Drawing.Point(477, 432);
+            this.lbHkRect.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkRect.Name = "lbHkRect";
+            this.lbHkRect.Size = new System.Drawing.Size(72, 17);
+            this.lbHkRect.TabIndex = 25;
+            this.lbHkRect.Text = "Rectangle";
+            // 
+            // lbHkArrow
+            // 
+            this.lbHkArrow.AutoSize = true;
+            this.lbHkArrow.Location = new System.Drawing.Point(304, 492);
+            this.lbHkArrow.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkArrow.Name = "lbHkArrow";
+            this.lbHkArrow.Size = new System.Drawing.Size(44, 17);
+            this.lbHkArrow.TabIndex = 23;
+            this.lbHkArrow.Text = "Arrow";
+            // 
+            // lbHkLine
+            // 
+            this.lbHkLine.AutoSize = true;
+            this.lbHkLine.Location = new System.Drawing.Point(304, 462);
+            this.lbHkLine.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkLine.Name = "lbHkLine";
+            this.lbHkLine.Size = new System.Drawing.Size(35, 17);
+            this.lbHkLine.TabIndex = 21;
+            this.lbHkLine.Text = "Line";
+            // 
+            // lbHkDraw
+            // 
+            this.lbHkDraw.AutoSize = true;
+            this.lbHkDraw.Location = new System.Drawing.Point(304, 432);
+            this.lbHkDraw.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbHkDraw.Name = "lbHkDraw";
+            this.lbHkDraw.Size = new System.Drawing.Size(40, 17);
+            this.lbHkDraw.TabIndex = 19;
+            this.lbHkDraw.Text = "Draw";
             // 
             // cbAllowHotkeyInPointer
             // 
@@ -541,11 +806,81 @@
             this.lbGlobalHotkey.TabIndex = 4;
             this.lbGlobalHotkey.Text = "Global hotkey (start drawing, switch between mouse pointer and drawing)";
             // 
+            // hiEllipse
+            // 
+            this.hiEllipse.BackColor = System.Drawing.Color.White;
+            this.hiEllipse.ExternalConflictFlag = false;
+            this.hiEllipse.Hotkey = hotkey2;
+            this.hiEllipse.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiEllipse.Location = new System.Drawing.Point(572, 462);
+            this.hiEllipse.Margin = new System.Windows.Forms.Padding(4);
+            this.hiEllipse.Name = "hiEllipse";
+            this.hiEllipse.RequireModifier = false;
+            this.hiEllipse.Size = new System.Drawing.Size(60, 22);
+            this.hiEllipse.TabIndex = 28;
+            this.hiEllipse.Text = "None";
+            // 
+            // hiRect
+            // 
+            this.hiRect.BackColor = System.Drawing.Color.White;
+            this.hiRect.ExternalConflictFlag = false;
+            this.hiRect.Hotkey = hotkey3;
+            this.hiRect.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiRect.Location = new System.Drawing.Point(572, 432);
+            this.hiRect.Margin = new System.Windows.Forms.Padding(4);
+            this.hiRect.Name = "hiRect";
+            this.hiRect.RequireModifier = false;
+            this.hiRect.Size = new System.Drawing.Size(60, 22);
+            this.hiRect.TabIndex = 26;
+            this.hiRect.Text = "None";
+            // 
+            // hiArrow
+            // 
+            this.hiArrow.BackColor = System.Drawing.Color.White;
+            this.hiArrow.ExternalConflictFlag = false;
+            this.hiArrow.Hotkey = hotkey4;
+            this.hiArrow.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiArrow.Location = new System.Drawing.Point(393, 492);
+            this.hiArrow.Margin = new System.Windows.Forms.Padding(4);
+            this.hiArrow.Name = "hiArrow";
+            this.hiArrow.RequireModifier = false;
+            this.hiArrow.Size = new System.Drawing.Size(60, 22);
+            this.hiArrow.TabIndex = 24;
+            this.hiArrow.Text = "None";
+            // 
+            // hiLine
+            // 
+            this.hiLine.BackColor = System.Drawing.Color.White;
+            this.hiLine.ExternalConflictFlag = false;
+            this.hiLine.Hotkey = hotkey5;
+            this.hiLine.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiLine.Location = new System.Drawing.Point(393, 462);
+            this.hiLine.Margin = new System.Windows.Forms.Padding(4);
+            this.hiLine.Name = "hiLine";
+            this.hiLine.RequireModifier = false;
+            this.hiLine.Size = new System.Drawing.Size(60, 22);
+            this.hiLine.TabIndex = 22;
+            this.hiLine.Text = "None";
+            // 
+            // hiDraw
+            // 
+            this.hiDraw.BackColor = System.Drawing.Color.White;
+            this.hiDraw.ExternalConflictFlag = false;
+            this.hiDraw.Hotkey = hotkey6;
+            this.hiDraw.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.hiDraw.Location = new System.Drawing.Point(393, 432);
+            this.hiDraw.Margin = new System.Windows.Forms.Padding(4);
+            this.hiDraw.Name = "hiDraw";
+            this.hiDraw.RequireModifier = false;
+            this.hiDraw.Size = new System.Drawing.Size(60, 22);
+            this.hiDraw.TabIndex = 20;
+            this.hiDraw.Text = "None";
+            // 
             // hiInkVisible
             // 
             this.hiInkVisible.BackColor = System.Drawing.Color.White;
             this.hiInkVisible.ExternalConflictFlag = false;
-            this.hiInkVisible.Hotkey = hotkey1;
+            this.hiInkVisible.Hotkey = hotkey7;
             this.hiInkVisible.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiInkVisible.Location = new System.Drawing.Point(453, 249);
             this.hiInkVisible.Margin = new System.Windows.Forms.Padding(4);
@@ -560,7 +895,7 @@
             // 
             this.hiSnapshot.BackColor = System.Drawing.Color.White;
             this.hiSnapshot.ExternalConflictFlag = false;
-            this.hiSnapshot.Hotkey = hotkey2;
+            this.hiSnapshot.Hotkey = hotkey8;
             this.hiSnapshot.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiSnapshot.Location = new System.Drawing.Point(453, 282);
             this.hiSnapshot.Margin = new System.Windows.Forms.Padding(4);
@@ -575,7 +910,7 @@
             // 
             this.hiClear.BackColor = System.Drawing.Color.White;
             this.hiClear.ExternalConflictFlag = false;
-            this.hiClear.Hotkey = hotkey3;
+            this.hiClear.Hotkey = hotkey9;
             this.hiClear.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiClear.Location = new System.Drawing.Point(453, 382);
             this.hiClear.Margin = new System.Windows.Forms.Padding(4);
@@ -590,7 +925,7 @@
             // 
             this.hiPan.BackColor = System.Drawing.Color.White;
             this.hiPan.ExternalConflictFlag = false;
-            this.hiPan.Hotkey = hotkey4;
+            this.hiPan.Hotkey = hotkey10;
             this.hiPan.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPan.Location = new System.Drawing.Point(453, 181);
             this.hiPan.Margin = new System.Windows.Forms.Padding(4);
@@ -605,7 +940,7 @@
             // 
             this.hiPointer.BackColor = System.Drawing.Color.White;
             this.hiPointer.ExternalConflictFlag = false;
-            this.hiPointer.Hotkey = hotkey5;
+            this.hiPointer.Hotkey = hotkey11;
             this.hiPointer.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPointer.Location = new System.Drawing.Point(453, 215);
             this.hiPointer.Margin = new System.Windows.Forms.Padding(4);
@@ -621,7 +956,7 @@
             // 
             this.hiRedo.BackColor = System.Drawing.Color.White;
             this.hiRedo.ExternalConflictFlag = false;
-            this.hiRedo.Hotkey = hotkey6;
+            this.hiRedo.Hotkey = hotkey12;
             this.hiRedo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiRedo.Location = new System.Drawing.Point(453, 348);
             this.hiRedo.Margin = new System.Windows.Forms.Padding(4);
@@ -636,7 +971,7 @@
             // 
             this.hiUndo.BackColor = System.Drawing.Color.White;
             this.hiUndo.ExternalConflictFlag = false;
-            this.hiUndo.Hotkey = hotkey7;
+            this.hiUndo.Hotkey = hotkey13;
             this.hiUndo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiUndo.Location = new System.Drawing.Point(453, 315);
             this.hiUndo.Margin = new System.Windows.Forms.Padding(4);
@@ -651,7 +986,7 @@
             // 
             this.hiEraser.BackColor = System.Drawing.Color.White;
             this.hiEraser.ExternalConflictFlag = false;
-            this.hiEraser.Hotkey = hotkey8;
+            this.hiEraser.Hotkey = hotkey14;
             this.hiEraser.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiEraser.Location = new System.Drawing.Point(453, 148);
             this.hiEraser.Margin = new System.Windows.Forms.Padding(4);
@@ -666,7 +1001,7 @@
             // 
             this.hiGlobal.BackColor = System.Drawing.Color.White;
             this.hiGlobal.ExternalConflictFlag = false;
-            this.hiGlobal.Hotkey = hotkey9;
+            this.hiGlobal.Hotkey = hotkey15;
             this.hiGlobal.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiGlobal.Location = new System.Drawing.Point(25, 48);
             this.hiGlobal.Margin = new System.Windows.Forms.Padding(4);
@@ -676,29 +1011,6 @@
             this.hiGlobal.TabIndex = 5;
             this.hiGlobal.Text = "None";
             this.hiGlobal.OnHotkeyChanged += new System.EventHandler(this.hi_OnHotkeyChanged);
-            // 
-            // lbFontSize
-            // 
-            this.lbFontSize.AutoSize = true;
-            this.lbFontSize.Location = new System.Drawing.Point(12, 291);
-            this.lbFontSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbFontSize.Name = "lbFontSize";
-            this.lbFontSize.Size = new System.Drawing.Size(36, 17);
-            this.lbFontSize.TabIndex = 13;
-            this.lbFontSize.Text = "Font";
-            // 
-            // numFontSize
-            // 
-            this.numFontSize.Location = new System.Drawing.Point(434, 291);
-            this.numFontSize.Name = "numFontSize";
-            this.numFontSize.Size = new System.Drawing.Size(137, 22);
-            this.numFontSize.TabIndex = 14;
-            this.numFontSize.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numFontSize.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // FormOptions
             // 
@@ -717,11 +1029,12 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numArrowSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFontSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCursorsize)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numFontSize)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -749,10 +1062,8 @@
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.Label lbGlobalHotkey;
-		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.CheckBox cbInkVisibleEnabled;
 		private System.Windows.Forms.CheckBox cbPanEnabled;
-		private System.Windows.Forms.CheckBox cbAllowDragging;
 		private HotkeyInputBox hiGlobal;
 		private HotkeyInputBox hiEraser;
 		private System.Windows.Forms.Label lbHkEraser;
@@ -779,5 +1090,29 @@
         private System.Windows.Forms.Label lbFont;
         private System.Windows.Forms.NumericUpDown numFontSize;
         private System.Windows.Forms.Label lbFontSize;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox cb_HandDrawnEnabled;
+        private System.Windows.Forms.CheckBox cb_LineEnabled;
+        private System.Windows.Forms.CheckBox cb_ArrowEnabled;
+        private System.Windows.Forms.CheckBox cb_RectEnabled;
+        private System.Windows.Forms.CheckBox cb_EllipseEnabled;
+        private System.Windows.Forms.CheckBox cb_TextEnabled;
+        private HotkeyInputBox hiText;
+        private System.Windows.Forms.Label lbHkText;
+        private HotkeyInputBox hiEllipse;
+        private System.Windows.Forms.Label lbHkEllipse;
+        private HotkeyInputBox hiRect;
+        private System.Windows.Forms.Label lbHkRect;
+        private HotkeyInputBox hiArrow;
+        private System.Windows.Forms.Label lbHkArrow;
+        private HotkeyInputBox hiLine;
+        private System.Windows.Forms.Label lbHkLine;
+        private HotkeyInputBox hiDraw;
+        private System.Windows.Forms.Label lbHkDraw;
+        private System.Windows.Forms.CheckBox cbFixedArrow;
+        private System.Windows.Forms.NumericUpDown numArrowSize;
+        private System.Windows.Forms.Label lbArrowLength;
+        private System.Windows.Forms.CheckBox cbFontFit;
+        private System.Windows.Forms.CheckBox cbAllowDragging;
     }
 }

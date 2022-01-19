@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -52,7 +52,7 @@ namespace gInk
             Root = root;
             InitializeComponent();
 
-            //dla obecnego wirtualnego ekranu ustanawia siê pozycja i wymiary FormDisplay
+            //dla obecnego wirtualnego ekranu ustanawia siÄ™ pozycja i wymiary FormDisplay
             this.Left = SystemInformation.VirtualScreen.Left;
             this.Top = SystemInformation.VirtualScreen.Top;
             //int targetbottom = 0;
@@ -67,18 +67,18 @@ namespace gInk
             this.Width = SystemInformation.VirtualScreen.Width;
             this.Height = SystemInformation.VirtualScreen.Height - 2;
 
-            //inicjacja uchwytów do pe³nego p³ótna (Canvus) i p³ótna dla jednego rysunku (OneStrokeCanvus)
-            //przypisowane s¹ uchwyty dla map bitowych GDI o wymiarach równych jednemu ca³emu ekranowi
+            //inicjacja uchwytÃ³w do peÅ‚nego pÅ‚Ã³tna (Canvus) i pÅ‚Ã³tna dla jednego rysunku (OneStrokeCanvus)
+            //przypisowane sÄ… uchwyty dla map bitowych GDI o wymiarach rÃ³wnych jednemu caÅ‚emu ekranowi
             Bitmap InitCanvus = new Bitmap(this.Width, this.Height);
             Canvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
             OneStrokeCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
             //BlankCanvus = InitCanvus.GetHbitmap(Color.FromArgb(0));
 
-            //uchwyt dla ca³ego ekranu
+            //uchwyt dla caÅ‚ego ekranu
             IntPtr screenDc = GetDC(IntPtr.Zero);
 
-            //tworzenie Device Contextów dla naszego ekranu (CreateCompatibleDC)
-            //oraz przypisywanie uchwytów do konkretnych DC (SelectObject)
+            //tworzenie Device ContextÃ³w dla naszego ekranu (CreateCompatibleDC)
+            //oraz przypisywanie uchwytÃ³w do konkretnych DC (SelectObject)
             canvusDc = CreateCompatibleDC(screenDc);
             SelectObject(canvusDc, Canvus);
             onestrokeDc = CreateCompatibleDC(screenDc);
@@ -87,12 +87,12 @@ namespace gInk
             //blankcanvusDc = CreateCompatibleDC(screenDc);
             //SelectObject(blankcanvusDc, BlankCanvus);
 
-            //inicjacja klasy Graphics dla pe³nego p³ótna za pomoc¹ stworzonego wczeœniej Device Context'u
+            //inicjacja klasy Graphics dla peÅ‚nego pÅ‚Ã³tna za pomocÄ… stworzonego wczeÅ›niej Device Context'u
             gCanvus = Graphics.FromHdc(canvusDc);
-            //tryb kompozycji SourceCopy, aby naniesiony kolor po prostu przykrywa³ kolor pod nim
+            //tryb kompozycji SourceCopy, aby naniesiony kolor po prostu przykrywaÅ‚ kolor pod nim
             gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
-            //analogiczna inicjacja dla p³ótna pojedynczego
+            //analogiczna inicjacja dla pÅ‚Ã³tna pojedynczego
             gOneStrokeCanvus = Graphics.FromHdc(onestrokeDc);
             //gOneStrokeCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
@@ -112,7 +112,7 @@ namespace gInk
 
             //this.DoubleBuffered = true;
 
-            //inicjalizacja bitmap dla toolbara i dla panelu wyboru gruboœci pisaka
+            //inicjalizacja bitmap dla toolbara i dla panelu wyboru gruboÅ›ci pisaka
             int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
             gpButtonsImage = new Bitmap(2400, gpheight);
             gpPenWidthImage = new Bitmap(200, gpheight);
@@ -120,8 +120,8 @@ namespace gInk
 
             TransparentBrush = new SolidBrush(Color.Transparent);
 
-            //SemiTransparentBrush u¿ywany w trybie tworzenie screenshota,
-            //jest to bia³y kolor ekranu z odpowiedni¹ przezroczystoœci¹
+            //SemiTransparentBrush uÅ¼ywany w trybie tworzenie screenshota,
+            //jest to biaÅ‚y kolor ekranu z odpowiedniÄ… przezroczystoÅ›ciÄ…
             SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
 
 
@@ -130,7 +130,7 @@ namespace gInk
 
         public void ToTopMostThrough()
         {
-            //ustawienie FormDisplay na pierwsz¹ warstwê, nad reszt¹ otwartych aplikacji
+            //ustawienie FormDisplay na pierwszÄ… warstwÄ™, nad resztÄ… otwartych aplikacji
 
             UInt32 dwExStyle = GetWindowLong(this.Handle, -20);
             SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
@@ -142,48 +142,48 @@ namespace gInk
 
         public void ClearCanvus()
         {
-            //metoda czyszcz¹ca p³ótno za pomoc¹ metody Clear() z klasy Graphics
+            //metoda czyszczÄ…ca pÅ‚Ã³tno za pomocÄ… metody Clear() z klasy Graphics
 
             gCanvus.Clear(Color.Transparent);
         }
         public void ClearCanvus(Graphics g)
         {
-            //przeci¹¿enie metody ClearCanvus() dla konkretnej instacji klasy Graphics (domyœ³nie jest dla pe³nego p³ótna)
+            //przeciÄ…Å¼enie metody ClearCanvus() dla konkretnej instacji klasy Graphics (domyÅ›Å‚nie jest dla peÅ‚nego pÅ‚Ã³tna)
 
             g.Clear(Color.Transparent);
         }
 
         public void DrawSnapping(Rectangle rect)
         {
-            //CompositingMode zmieniony na SourceOver, czyli zmywanie siê z kolorem pod spodem
+            //CompositingMode zmieniony na SourceOver, czyli zmywanie siÄ™ z kolorem pod spodem
             gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
             if (rect.Width > 0 && rect.Height > 0)
             {
-                //gdy trzymamy LPM wype³niaj¹ siê 4 prostok¹ty stykaj¹ce siê z poszczególnymi bokami naszego prostok¹ta wyznaczaj¹cego wymiary screenshota, ale bêd¹ce poza nim
-                //otrzymany jest efekt, ¿e wewn¹trz naszego prostok¹ta mamy po prostu przezroczystoœæ - widzimy co zrzucamy
+                //gdy trzymamy LPM wypeÅ‚niajÄ… siÄ™ 4 prostokÄ…ty stykajÄ…ce siÄ™ z poszczegÃ³lnymi bokami naszego prostokÄ…ta wyznaczajÄ…cego wymiary screenshota, ale bÄ™dÄ…ce poza nim
+                //otrzymany jest efekt, Å¼e wewnÄ…trz naszego prostokÄ…ta mamy po prostu przezroczystoÅ›Ä‡ - widzimy co zrzucamy
                 gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(0, 0, rect.Left, this.Height));
                 gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Right, 0, this.Width - rect.Right, this.Height));
                 gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Left, 0, rect.Width, rect.Top));
                 gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(rect.Left, rect.Bottom, rect.Width, this.Height - rect.Bottom));
 
-                //rysowanie prostok¹ta oznaczaj¹cego wymiary zrzutu ekranu (bardziej ciemno-szara ramka)
+                //rysowanie prostokÄ…ta oznaczajÄ…cego wymiary zrzutu ekranu (bardziej ciemno-szara ramka)
                 Pen pen = new Pen(Color.FromArgb(200, 80, 80, 80));
                 pen.Width = 3;
                 gCanvus.DrawRectangle(pen, rect);
             }
             else
             {
-                //gdy nie trzymamy LPM ca³y ekran jest pokryty SemiTransparentBrush (pó³-przezroczyste bia³e t³o)
+                //gdy nie trzymamy LPM caÅ‚y ekran jest pokryty SemiTransparentBrush (pÃ³Å‚-przezroczyste biaÅ‚e tÅ‚o)
                 gCanvus.FillRectangle(SemiTransparentBrush, new Rectangle(0, 0, this.Width, this.Height));
             }
 
-            //powrót do normalnego CompositingMode
+            //powrÃ³t do normalnego CompositingMode
             gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 
         public void DrawButtons(bool redrawbuttons, bool exiting = false)
         {
-            //pokazanie na ekranie pe³nej ramki toolbara (nie konkretnych przycisków)
+            //pokazanie na ekranie peÅ‚nej ramki toolbara (nie konkretnych przyciskÃ³w)
             if (Root.AlwaysHideToolbar)
                 return;
 
@@ -213,7 +213,7 @@ namespace gInk
             }
             gCanvus.DrawImage(gpButtonsImage, left, top, new Rectangle(0, 0, drawwidth, height), GraphicsUnit.Pixel);
 
-            //pokazanie panelu z wyborem gruboœci, jeœli ma byæ widoczny
+            //pokazanie panelu z wyborem gruboÅ›ci, jeÅ›li ma byÄ‡ widoczny
             if (Root.gpPenWidthVisible)
             {
                 top = Root.FormCollection.gpPenWidth.Top;
@@ -240,8 +240,8 @@ namespace gInk
         }
         public void DrawButtons(Graphics g, bool redrawbuttons, bool exiting = false)
         {
-            //przeci¹¿enie metody DrawButtons() która dzia³a na konkretnej instacji klasy Graphics
-            //zawiera ten sam kod, co domyœlna metoda DrawButtons()
+            //przeciÄ…Å¼enie metody DrawButtons() ktÃ³ra dziaÅ‚a na konkretnej instacji klasy Graphics
+            //zawiera ten sam kod, co domyÅ›lna metoda DrawButtons()
             int top, height, left, width;
             int fullwidth;
             int gpbl;
@@ -280,7 +280,7 @@ namespace gInk
                 g.DrawImage(gpPenWidthImage, left, top);
             }
 
-            if(Root.textInputPanelVisible)
+            if (Root.textInputPanelVisible)
             {
                 top = Root.FormCollection.textInputPanel.Top;
                 height = Root.FormCollection.textInputPanel.Height;
@@ -296,42 +296,42 @@ namespace gInk
 
         public void DrawStrokes()
         {
-            //nanoszenie na ekran wszystkich rysunków (podczas, gdy nie jest aktywne ukrycie ich poprzez przycisk)
+            //nanoszenie na ekran wszystkich rysunkÃ³w (podczas, gdy nie jest aktywne ukrycie ich poprzez przycisk)
             DrawStrokes(gCanvus);
         }
 
 
         public void DrawStrokes(Graphics g)
         {
-            //przeci¹¿enie DrawStrokes() dla konkretnej instancji klasy Graphics
+            //przeciÄ…Å¼enie DrawStrokes() dla konkretnej instancji klasy Graphics
             if (Root.InkVisible)
             {
                 Root.FormCollection.IC.Renderer.Draw(g, Root.FormCollection.IC.Ink.Strokes);
-                gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
                 foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
                 {
                     if (stroke.ExtendedProperties.Contains(Root.TextGuid))
                     {
+                        gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
                         string text = (string)stroke.ExtendedProperties[Root.TextGuid].Data;
                         int fontIndex = (int)stroke.ExtendedProperties[Root.FontGuid].Data;
-                        Font testFont = new Font(Root.IFC.Families[fontIndex].Name, 24);
-                        
+                        int fontSize = (int)stroke.ExtendedProperties[Root.FontSizeGuid].Data;
+                        Font testFont = new Font(Root.IFC.Families[fontIndex].Name, fontSize);
+
                         Point point = stroke.GetPoint(0);
                         Root.FormCollection.IC.Renderer.InkSpaceToPixel(g, ref point);
 
                         SolidBrush solidBrush = new SolidBrush(stroke.DrawingAttributes.Color);
                         g.DrawString(text, testFont, solidBrush, point.X, point.Y);
-                        
+                        gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
                     }
                 }
-                gCanvus.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
             }
         }
 
         public void MoveStrokes(int dy)
         {
-            //metoda u¿ywana przy AutoScroll, by rysunki przenosi³y siê wraz ze scrollowaniem myszk¹
-            //funkcja AutoScroll nie ma jednak opcji uruchomienia z poziomu u¿ytkownika
+            //metoda uÅ¼ywana przy AutoScroll, by rysunki przenosiÅ‚y siÄ™ wraz ze scrollowaniem myszkÄ…
+            //funkcja AutoScroll nie ma jednak opcji uruchomienia z poziomu uÅ¼ytkownika
             Point pt1 = new Point(0, 0);
             Point pt2 = new Point(0, 100);
             Root.FormCollection.IC.Renderer.PixelToInkSpace(gCanvus, ref pt1);
@@ -537,11 +537,17 @@ namespace gInk
 
         public void DrawOtherShapePreview(Graphics g)
         {
-            Pen pen = new Pen(Root.PenAttr[Root.CurrentPen].Color, 3);
+            Color color = Color.FromArgb(255 - Root.PenAttr[Root.CurrentPen].Transparency, Root.PenAttr[Root.CurrentPen].Color);
+
+            //konwersja z himetric na piksele
+            Pen pen = new Pen(color, (float)((double)Root.PenAttr[Root.CurrentPen].Width / 26.45833));
+
+            g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
             switch (Root.currentDrawingMode)
             {
                 case Root.DrawingMode.Line:
-                    g.DrawLine(pen, Root.LineStartX, Root.LineStartY, Root.LineEndX, Root.LineEndY);
+                    g.DrawLine(pen, Root.DrawnLine.BeginPoint, Root.DrawnLine.EndPoint);
                     break;
                 case Root.DrawingMode.Arrow:
                     double angle = Math.PI / 12.0;
@@ -549,17 +555,22 @@ namespace gInk
                     double x1, x2, x3, x4;
                     double y1, y2, y3, y4;
 
-                    x1 = Root.LineStartX;
-                    x2 = Root.LineEndX;
-                    y1 = Root.LineStartY;
-                    y2 = Root.LineEndY;
+                    x1 = Root.DrawnLine.BeginPoint.X;
+                    x2 = Root.DrawnLine.EndPoint.X;
+                    y1 = Root.DrawnLine.BeginPoint.Y;
+                    y2 = Root.DrawnLine.EndPoint.Y;
 
-                    
                     double l1 = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
-                    g.DrawLine(pen, (int)Math.Round(x1), (int)Math.Round(y1), (int)Math.Round(x2), (int)Math.Round(y2));
-                    if(l1 > 4)
+                    double l2 = l1 / 4;
+
+                    g.DrawLine(pen, Root.DrawnLine.BeginPoint, Root.DrawnLine.EndPoint);
+                    if (l1 > 4)
                     {
-                        double l2 = l1 / 4;
+                        if(Root.FixedArrowLength)
+                        {
+                            if (l2 >= Root.ArrowLength)
+                                l2 = Root.ArrowLength;
+                        }
 
                         x3 = x2 + (l2 / l1) * ((x1 - x2) * Math.Cos(angle) + (y1 - y2) * Math.Sin(angle));
                         y3 = y2 + (l2 / l1) * ((y1 - y2) * Math.Cos(angle) - (x1 - x2) * Math.Sin(angle));
@@ -570,7 +581,7 @@ namespace gInk
                         g.DrawLine(pen, (int)Math.Round(x2), (int)Math.Round(y2), (int)Math.Round(x4), (int)Math.Round(y4));
                     }
 
-                    
+
                     break;
                 case Root.DrawingMode.Rectangle:
                     g.DrawRectangle(pen, Root.DrawnRect);
@@ -578,8 +589,15 @@ namespace gInk
                 case Root.DrawingMode.Ellipse:
                     g.DrawEllipse(pen, Root.DrawnRect);
                     break;
+                case Root.DrawingMode.Text:
+                    if (Root.FitFontToRect)
+                    {
+                        Pen tempPen = new Pen(Color.Black, 1);
+                        g.DrawRectangle(tempPen, Root.DrawnRect);
+                    }
+                    break;
             }
-
+            g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
         }
 
         int stackmove = 0;

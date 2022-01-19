@@ -30,6 +30,14 @@ namespace gInk
 		public string ButtonNameExit = "Exit drawing";
 		public string ButtonNameDock = "Dock";
 
+		public string ButtonNameDraw = "Hand drawn";
+		public string ButtonNameLine = "Line";
+		public string ButtonNameArrow = "Arrow";
+		public string ButtonNameRect = "Rectangle";
+		public string ButtonNameEllipse = "Ellipse";
+		public string ButtonNameText = "Text";
+
+
 		public string MenuEntryExit = "Exit";
 		public string MenuEntryOptions = "Options";
 		public string MenuEntryAbout = "About";
@@ -47,6 +55,12 @@ namespace gInk
 		public string OptionsGeneralWhitetrayicon = "Use white tray icon";
 		public string OptionsGeneralAllowdragging = "Allow dragging toolbar";
 		public string OptionsGeneralNotePenwidth = "Note: pen width panel overides each individual pen width settings";
+
+		public string OptionsGeneralFont = "Font";
+		public string OptionsGeneralFontSize = "Font size";
+		public string OptionsGeneralAllowDynamicArrowLength = "Fixed arrow length";
+		public string OptionsGeneralArrowLength = "Arrow length";
+		public string OptionsGeneralFixedFont = "Fit font automatically";
 
 		public string OptionsPensShow = "Show";
 		public string OptionsPensColor = "Color";

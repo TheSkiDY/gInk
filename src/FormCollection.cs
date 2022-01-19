@@ -145,7 +145,7 @@ namespace gInk
             InitButtonPos(btRect, ref cumulatedleft, Root.RectEnabled);
             InitButtonPos(btArrow, ref cumulatedleft, Root.ArrowEnabled);
             InitButtonPos(btLine, ref cumulatedleft, Root.LineEnabled);
-            InitButtonPos(btDraw, ref cumulatedleft, true);
+            InitButtonPos(btDraw, ref cumulatedleft, Root.HandDrawnEnabled);
 
             //dłuższa przerwa między przyciskami
             cumulatedleft += (int)(btStop.Width * 0.8);
@@ -223,12 +223,12 @@ namespace gInk
 
             pboxPenWidthIndicator.Top = 0;
             pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
-            
+
             textInput.Width = (int)(0.9 * textInputPanel.Width);
 
             gpPenWidth.Controls.Add(pboxPenWidthIndicator);
             textInputPanel.Controls.Add(textInput);
-           
+
 
             //informacje z https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.5/ms552322(v=vs.90)
 
@@ -348,12 +348,23 @@ namespace gInk
             this.toolTip.SetToolTip(this.btClear, Root.Local.ButtonNameClear + " (" + Root.Hotkey_Clear.ToString() + ")");
             this.toolTip.SetToolTip(this.btStop, Root.Local.ButtonNameExit + " (ESC)");
 
-            this.toolTip.SetToolTip(this.btLine, "Line - test");
-            this.toolTip.SetToolTip(this.btRect, "Rect - test");
-            this.toolTip.SetToolTip(this.btArrow, "Arrow - test");
-            this.toolTip.SetToolTip(this.btEllipse, "Ellipse - test");
-            this.toolTip.SetToolTip(this.btDraw, "Draw - test");
-            this.toolTip.SetToolTip(this.btText, "Text - test");
+            this.toolTip.SetToolTip(this.btLine, Root.Local.ButtonNameLine + " (" + Root.Hotkey_Line + ")");
+            this.toolTip.SetToolTip(this.btRect, Root.Local.ButtonNameRect + " (" + Root.Hotkey_Rect + ")");
+            this.toolTip.SetToolTip(this.btArrow, Root.Local.ButtonNameArrow + " (" + Root.Hotkey_Arrow + ")");
+            this.toolTip.SetToolTip(this.btEllipse, Root.Local.ButtonNameEllipse + " (" + Root.Hotkey_Ellipse + ")");
+            this.toolTip.SetToolTip(this.btDraw, Root.Local.ButtonNameDraw + " (" + Root.Hotkey_Draw + ")");
+            this.toolTip.SetToolTip(this.btText, Root.Local.ButtonNameText + " (" + Root.Hotkey_Text + ")");
+
+            numFontSizeDynamic.Value = Root.FontSize;
+            if (Root.FitFontToRect)
+            {
+                numFontSizeDynamic.Visible = false;
+                textInput.Top = textInputPanel.Height / 2 - textInput.Height / 2;
+            }
+            else
+                numFontSizeDynamic.Visible = true;
+
+            SelectDrawingMode(0);
         }
 
         private void InitButtonPropertySetup(Button button, double height = defaultButtonHeight, double width = defaultButtonWidth, double top = defaultButtonTop)
@@ -395,7 +406,7 @@ namespace gInk
                 IC.Ink.DeleteStroke(e.Stroke);
             }
 
-            if(Root.CurrentPen >= 0)
+            if (Root.CurrentPen >= 0)
                 switch (Root.currentDrawingMode)
                 {
                     case Root.DrawingMode.Line:
@@ -411,7 +422,7 @@ namespace gInk
                         AddEllipse();
                         break;
                     case Root.DrawingMode.Text:
-                        if(string.IsNullOrEmpty(textInput.Text))
+                        if (string.IsNullOrEmpty(textInput.Text))
                             return;
                         else
                             AddText();
@@ -468,14 +479,12 @@ namespace gInk
             {
                 case Root.DrawingMode.Line:
                 case Root.DrawingMode.Arrow:
-                    Root.LineStartX = e.X;
-                    Root.LineStartY = e.Y;
+                    Root.DrawnLine.BeginPoint = new Point(e.X, e.Y);
                     break;
                 case Root.DrawingMode.Rectangle:
                 case Root.DrawingMode.Ellipse:
                 case Root.DrawingMode.Text:
-                    Root.RectStartX = e.X;
-                    Root.RectStartY = e.Y;
+                    Root.RectStart = new Point(e.X, e.Y);
                     Root.DrawnRect = new Rectangle(e.X, e.Y, 0, 0);
                     break;
             }
@@ -518,16 +527,15 @@ namespace gInk
             {
                 case Root.DrawingMode.Line:
                 case Root.DrawingMode.Arrow:
-                    Root.LineEndX = e.X;
-                    Root.LineEndY = e.Y;
+                    Root.DrawnLine.EndPoint = new Point(e.X, e.Y);
                     break;
                 case Root.DrawingMode.Rectangle:
                 case Root.DrawingMode.Ellipse:
                 case Root.DrawingMode.Text:
-                    int left = Math.Min(Root.RectStartX, e.X);
-                    int top = Math.Min(Root.RectStartY, e.Y);
-                    int width = Math.Abs(Root.RectStartX - e.X);
-                    int height = Math.Abs(Root.RectStartY - e.Y);
+                    int left = Math.Min(Root.RectStart.X, e.X);
+                    int top = Math.Min(Root.RectStart.Y, e.Y);
+                    int width = Math.Abs(Root.RectStart.X - e.X);
+                    int height = Math.Abs(Root.RectStart.Y - e.Y);
                     Root.DrawnRect = new Rectangle(left, top, width, height);
                     break;
             }
@@ -734,7 +742,7 @@ namespace gInk
                 case Root.DrawingMode.Rectangle:
                     Root.currentDrawingMode = Root.DrawingMode.Rectangle;
                     btRect.Image = image_rect_act;
-                    break; 
+                    break;
                 case Root.DrawingMode.Arrow:
                     Root.currentDrawingMode = Root.DrawingMode.Arrow;
                     btArrow.Image = image_arrow_act;
@@ -755,7 +763,7 @@ namespace gInk
             // -3=pan, -2=pointer, -1=erasor, 0+=pens
             if (pen == -3)
             {
-                if(Root.CurrentPen >= 0)
+                if (Root.CurrentPen >= 0)
                 {
                     Root.PreviousPen = Root.CurrentPen;
                 }
@@ -909,7 +917,7 @@ namespace gInk
                 Root.gpPenWidthVisible = false;
                 Root.UponSubPanelUpdate = true;
             }
-            else if(Root.textInputPanelVisible && Root.currentDrawingMode != Root.DrawingMode.Text)
+            else if (Root.textInputPanelVisible && Root.currentDrawingMode != Root.DrawingMode.Text)
             {
                 Root.textInputPanelVisible = false;
                 Root.UponAllDrawingUpdate = true;
@@ -930,7 +938,7 @@ namespace gInk
             Root.ClearInk();
             SaveUndoStrokes();
             Root.SaveOptions("config.ini");
-            
+
             Root.gpPenWidthVisible = false;
             Root.textInputPanelVisible = false;
 
@@ -1329,7 +1337,7 @@ namespace gInk
 
             if (Root.textInputPanelVisible != textInputPanel.Visible)
                 textInputPanel.Visible = Root.textInputPanelVisible;
-;
+            ;
             // hotkeys
 
             const int VK_LCONTROL = 0xA2;
@@ -1365,7 +1373,7 @@ namespace gInk
             }
 
 
-            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0 && !textInput.Focused)
+            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0 && !textInput.Focused && !numFontSizeDynamic.Focused)
             {
                 bool control = ((short)(GetKeyState(VK_LCONTROL) | GetKeyState(VK_RCONTROL)) & 0x8000) == 0x8000;
                 bool alt = ((short)(GetKeyState(VK_LMENU) | GetKeyState(VK_RMENU)) & 0x8000) == 0x8000;
@@ -1431,6 +1439,48 @@ namespace gInk
                 if (pressed && !LastClearStatus && Root.Hotkey_Clear.ModifierMatch(control, alt, shift, win))
                 {
                     btClear_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Draw.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Draw.ModifierMatch(control, alt, shift, win))
+                {
+                    btDraw_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Line.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
+                {
+                    btLine_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Arrow.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Arrow.ModifierMatch(control, alt, shift, win))
+                {
+                    btArrow_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Rect.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Rect.ModifierMatch(control, alt, shift, win))
+                {
+                    btRect_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Ellipse.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Ellipse.ModifierMatch(control, alt, shift, win))
+                {
+                    btEllipse_Click(null, null);
+                }
+                LastClearStatus = pressed;
+
+                pressed = (GetKeyState(Root.Hotkey_Text.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastClearStatus && Root.Hotkey_Text.ModifierMatch(control, alt, shift, win))
+                {
+                    btText_Click(null, null);
                 }
                 LastClearStatus = pressed;
 
@@ -1608,9 +1658,9 @@ namespace gInk
             Point[] linePoints = new Point[2];
 
             //początek
-            linePoints[0] = new Point(Root.LineStartX, Root.LineStartY);
+            linePoints[0] = Root.DrawnLine.BeginPoint;
             //koniec
-            linePoints[1] = new Point(Root.LineEndX, Root.LineEndY);
+            linePoints[1] = Root.DrawnLine.EndPoint;
 
             //ustawienie wyświetlania
             IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref linePoints);
@@ -1627,30 +1677,36 @@ namespace gInk
 
         public void AddArrow()
         {
-            double angle = Math.PI/12.0;
+            double angle = Math.PI / 12.0;
 
             Point[] arrowPoints = new Point[5];
 
             double x1, x2, x3, x4;
             double y1, y2, y3, y4;
 
-            x1 = Root.LineStartX;
-            x2 = Root.LineEndX;
-            y1 = Root.LineStartY;
-            y2 = Root.LineEndY;
+            x1 = Root.DrawnLine.BeginPoint.X;
+            x2 = Root.DrawnLine.EndPoint.X;
+            y1 = Root.DrawnLine.BeginPoint.Y;
+            y2 = Root.DrawnLine.EndPoint.Y;
 
             double l1 = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
             double l2 = l1 / 4;
+
+            if (Root.FixedArrowLength)
+            {
+                if (l2 >= Root.ArrowLength)
+                    l2 = Root.ArrowLength;
+            }
 
             x3 = x2 + (l2 / l1) * ((x1 - x2) * Math.Cos(angle) + (y1 - y2) * Math.Sin(angle));
             y3 = y2 + (l2 / l1) * ((y1 - y2) * Math.Cos(angle) - (x1 - x2) * Math.Sin(angle));
             x4 = x2 + (l2 / l1) * ((x1 - x2) * Math.Cos(angle) - (y1 - y2) * Math.Sin(angle));
             y4 = y2 + (l2 / l1) * ((y1 - y2) * Math.Cos(angle) + (x1 - x2) * Math.Sin(angle));
 
-            arrowPoints[0] = new Point((int)Math.Round(x1), (int)Math.Round(y1));
-            arrowPoints[1] = new Point((int)Math.Round(x2), (int)Math.Round(y2));
+            arrowPoints[0] = Root.DrawnLine.BeginPoint;
+            arrowPoints[1] = Root.DrawnLine.EndPoint;
             arrowPoints[2] = new Point((int)Math.Round(x3), (int)Math.Round(y3));
-            arrowPoints[3] = new Point((int)Math.Round(x2), (int)Math.Round(y2));
+            arrowPoints[3] = Root.DrawnLine.EndPoint;
             arrowPoints[4] = new Point((int)Math.Round(x4), (int)Math.Round(y4));
 
             IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref arrowPoints);
@@ -1726,34 +1782,77 @@ namespace gInk
         }
 
 
+        private float GetFitFontSize(string text)
+        {
+            int maxFontSize = 200;
+            int minFontSize = 4;
+            int width = Root.DrawnRect.Width;
+            Font testFont = null;
+
+            for (int adjustedSize = maxFontSize; adjustedSize > minFontSize; adjustedSize--)
+            {
+                testFont = new Font(Root.IFC.Families[Root.CurrentFontIndex].Name, adjustedSize);
+
+                SizeF testSize = Root.FormDisplay.gCanvus.MeasureString(text, testFont);
+                if (width >= (int)Math.Round(testSize.Width))
+                {
+                    return testFont.Size;
+                }
+            }
+
+            return minFontSize;
+        }
+
         public void AddText()
         {
             string txt = textInput.Text;
             if (string.IsNullOrEmpty(txt))
                 return;
 
-            int x, y;
+            int x, y, x2, y2;
+
+            float fontSize;
+
             x = Root.DrawnRect.X;
-            y = Root.DrawnRect.Y;
+            if (Root.FitFontToRect)
+                fontSize = GetFitFontSize(txt);
+            else
+                fontSize = Root.FontSize;
 
-            Point textStartingPoint = new Point(x,y);
-            IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref textStartingPoint);
+            Font tmpFont = new Font(Root.IFC.Families[Root.CurrentFontIndex].Name, fontSize);
+            int textWidth = (int)Root.FormDisplay.gCanvus.MeasureString(txt, tmpFont).Width;
+            int textHeight = (int)Root.FormDisplay.gCanvus.MeasureString(txt, tmpFont).Height;
 
-            Point[] textPoints = new Point[1];
-            textPoints[0] = textStartingPoint;
+
+            if (Root.FitFontToRect)
+                y = Root.DrawnRect.Y + (Root.DrawnRect.Height / 2) - (textHeight / 2);
+            else
+                y = Root.DrawnRect.Y;
+            x2 = x + textWidth;
+            y2 = y + textHeight;
+            Point[] textPoints = new Point[2];
+            textPoints[0] = new Point(x, y);
+            textPoints[1] = new Point(x2, y2);
+
+            IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref textPoints);
             Stroke textStroke = IC.Ink.CreateStroke(textPoints);
             textStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-            textStroke.DrawingAttributes.Width = 0;
-            textStroke.ExtendedProperties.Add(Root.TextGuid,txt);
-            textStroke.ExtendedProperties.Add(Root.FontGuid,Root.CurrentFontIndex);
-            textStroke.ExtendedProperties.Add(Root.FontSizeGuid, Root.FontSize);
-
+            textStroke.ExtendedProperties.Add(Root.TextGuid, txt);
+            textStroke.ExtendedProperties.Add(Root.FontGuid, Root.CurrentFontIndex);
+            textStroke.ExtendedProperties.Add(Root.FontSizeGuid, (int)fontSize);
+            textStroke.DrawingAttributes.Transparency = 255;
             IC.Ink.Strokes.Add(textStroke);
             textInput.Clear();
         }
 
         private void textInput_TextChanged(object sender, EventArgs e)
         {
+            Root.UponAllDrawingUpdate = true;
+        }
+
+        private void numFontSizeDynamic_ValueChanged(object sender, EventArgs e)
+        {
+            Root.FontSize = (int)numFontSizeDynamic.Value;
             Root.UponAllDrawingUpdate = true;
         }
 

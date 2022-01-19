@@ -51,11 +51,13 @@
             this.gpPenWidth = new System.Windows.Forms.Panel();
             this.pboxPenWidthIndicator = new System.Windows.Forms.PictureBox();
             this.textInputPanel = new System.Windows.Forms.Panel();
+            this.numFontSizeDynamic = new System.Windows.Forms.NumericUpDown();
             this.textInput = new System.Windows.Forms.TextBox();
             this.gpButtons.SuspendLayout();
             this.gpPenWidth.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).BeginInit();
             this.textInputPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFontSizeDynamic)).BeginInit();
             this.SuspendLayout();
             // 
             // gpButtons
@@ -431,17 +433,41 @@
             // textInputPanel
             // 
             this.textInputPanel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textInputPanel.Controls.Add(this.numFontSizeDynamic);
             this.textInputPanel.Controls.Add(this.textInput);
             this.textInputPanel.Location = new System.Drawing.Point(559, 220);
             this.textInputPanel.Name = "textInputPanel";
-            this.textInputPanel.Size = new System.Drawing.Size(300, 50);
+            this.textInputPanel.Size = new System.Drawing.Size(342, 60);
             this.textInputPanel.TabIndex = 5;
+            // 
+            // numFontSizeDynamic
+            // 
+            this.numFontSizeDynamic.Location = new System.Drawing.Point(3, 31);
+            this.numFontSizeDynamic.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numFontSizeDynamic.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numFontSizeDynamic.Name = "numFontSizeDynamic";
+            this.numFontSizeDynamic.Size = new System.Drawing.Size(68, 22);
+            this.numFontSizeDynamic.TabIndex = 1;
+            this.numFontSizeDynamic.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numFontSizeDynamic.ValueChanged += new System.EventHandler(this.numFontSizeDynamic_ValueChanged);
             // 
             // textInput
             // 
             this.textInput.Location = new System.Drawing.Point(3, 3);
             this.textInput.Name = "textInput";
-            this.textInput.Size = new System.Drawing.Size(280, 22);
+            this.textInput.Size = new System.Drawing.Size(233, 22);
             this.textInput.TabIndex = 0;
             this.textInput.TextChanged += new System.EventHandler(this.textInput_TextChanged);
             // 
@@ -470,6 +496,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).EndInit();
             this.textInputPanel.ResumeLayout(false);
             this.textInputPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFontSizeDynamic)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -499,6 +526,7 @@
         public System.Windows.Forms.Button btText;
         public System.Windows.Forms.Panel textInputPanel;
         public System.Windows.Forms.TextBox textInput;
+        private System.Windows.Forms.NumericUpDown numFontSizeDynamic;
     }
 }
 
