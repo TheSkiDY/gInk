@@ -289,8 +289,8 @@ namespace gInk
 
 			//konstruktory trzech najważniejszych klas odpowiadających za mechanizm rysowania
 
-			FormDisplay = new FormDisplay(this);
 			FormCollection = new FormCollection(this);
+			FormDisplay = new FormDisplay(this);
 
 			//ButtonHitter służy do trybu programu, w którym działa normalny kursor i można nim działać zwyczajnie na system
 			//podczas gdy nadal widoczne są rysunki

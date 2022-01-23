@@ -435,14 +435,14 @@
             this.textInputPanel.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textInputPanel.Controls.Add(this.numFontSizeDynamic);
             this.textInputPanel.Controls.Add(this.textInput);
-            this.textInputPanel.Location = new System.Drawing.Point(559, 220);
+            this.textInputPanel.Location = new System.Drawing.Point(559, 186);
             this.textInputPanel.Name = "textInputPanel";
-            this.textInputPanel.Size = new System.Drawing.Size(342, 60);
+            this.textInputPanel.Size = new System.Drawing.Size(400, 120);
             this.textInputPanel.TabIndex = 5;
             // 
             // numFontSizeDynamic
             // 
-            this.numFontSizeDynamic.Location = new System.Drawing.Point(3, 31);
+            this.numFontSizeDynamic.Location = new System.Drawing.Point(329, 4);
             this.numFontSizeDynamic.Maximum = new decimal(new int[] {
             200,
             0,
@@ -465,9 +465,11 @@
             // 
             // textInput
             // 
+            this.textInput.AcceptsTab = true;
             this.textInput.Location = new System.Drawing.Point(3, 3);
+            this.textInput.Multiline = true;
             this.textInput.Name = "textInput";
-            this.textInput.Size = new System.Drawing.Size(233, 22);
+            this.textInput.Size = new System.Drawing.Size(320, 114);
             this.textInput.TabIndex = 0;
             this.textInput.TextChanged += new System.EventHandler(this.textInput_TextChanged);
             // 

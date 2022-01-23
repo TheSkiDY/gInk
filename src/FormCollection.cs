@@ -218,17 +218,18 @@ namespace gInk
             gpPenWidth.Left = gpButtonsLeft + btPenWidth.Left - gpPenWidth.Width / 2 + btPenWidth.Width / 2;
             gpPenWidth.Top = gpButtonsTop - gpPenWidth.Height - 10;
 
-            textInputPanel.Left = gpButtonsLeft + btText.Left - textInputPanel.Width / 2 + btText.Width / 2;
-            textInputPanel.Top = gpButtonsTop - textInputPanel.Height - 10;
+            textInputPanel.Left = Screen.PrimaryScreen.WorkingArea.Right - PrimaryLeft - textInputPanel.Width - 10;
+            textInputPanel.Top = gpButtonsTop - textInputPanel.Height - 5;
 
             pboxPenWidthIndicator.Top = 0;
             pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
 
-            textInput.Width = (int)(0.9 * textInputPanel.Width);
+            textInput.Width = (int)(0.8 * textInputPanel.Width);
+            
+            //ustawienie szerokości tabulacji - 0x00CB = EM_SETTABSTOPS
+            SendMessage(textInput.Handle, 0x00CB, 1, new int[] { 16 });
 
             gpPenWidth.Controls.Add(pboxPenWidthIndicator);
-            textInputPanel.Controls.Add(textInput);
-
 
             //informacje z https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.5/ms552322(v=vs.90)
 
@@ -359,7 +360,6 @@ namespace gInk
             if (Root.FitFontToRect)
             {
                 numFontSizeDynamic.Visible = false;
-                textInput.Top = textInputPanel.Height / 2 - textInput.Height / 2;
             }
             else
                 numFontSizeDynamic.Visible = true;
@@ -407,6 +407,7 @@ namespace gInk
             }
 
             if (Root.CurrentPen >= 0)
+            {
                 switch (Root.currentDrawingMode)
                 {
                     case Root.DrawingMode.Line:
@@ -430,6 +431,14 @@ namespace gInk
                     default:
                         break;
                 }
+
+                Root.DrawnLine.BeginPoint = new Point(0, 0);
+                Root.DrawnLine.EndPoint = new Point(0, 0);
+                Root.DrawnRect = new Rectangle(0, 0, 0, 0);
+                Root.RectStart = new Point(0, 0);
+            }
+                
+
             SaveUndoStrokes();
         }
 
@@ -1103,6 +1112,13 @@ namespace gInk
         bool LastSnapStatus = false;
         bool LastClearStatus = false;
 
+        bool LastDrawStatus = true;
+        bool LastLineStatus = true;
+        bool LastArrowStatus = true;
+        bool LastRectStatus = true;
+        bool LastEllipseStatus = true;
+        bool LastTextStatus = true;
+
         private void gpPenWidth_MouseDown(object sender, MouseEventArgs e)
         {
             gpPenWidth_MouseOn = true;
@@ -1443,46 +1459,46 @@ namespace gInk
                 LastClearStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Draw.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Draw.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastDrawStatus && Root.Hotkey_Draw.ModifierMatch(control, alt, shift, win))
                 {
                     btDraw_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastDrawStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Line.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastLineStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
                 {
                     btLine_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastLineStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Arrow.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Arrow.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastArrowStatus && Root.Hotkey_Arrow.ModifierMatch(control, alt, shift, win))
                 {
                     btArrow_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastArrowStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Rect.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Rect.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastRectStatus && Root.Hotkey_Rect.ModifierMatch(control, alt, shift, win))
                 {
                     btRect_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastRectStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Ellipse.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Ellipse.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastEllipseStatus && Root.Hotkey_Ellipse.ModifierMatch(control, alt, shift, win))
                 {
                     btEllipse_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastEllipseStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Text.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastClearStatus && Root.Hotkey_Text.ModifierMatch(control, alt, shift, win))
+                if (pressed && !LastTextStatus && Root.Hotkey_Text.ModifierMatch(control, alt, shift, win))
                 {
                     btText_Click(null, null);
                 }
-                LastClearStatus = pressed;
+                LastTextStatus = pressed;
 
                 pressed = (GetKeyState(Root.Hotkey_Snap.Key) & 0x8000) == 0x8000;
                 if (pressed && !LastSnapStatus && Root.Hotkey_Snap.ModifierMatch(control, alt, shift, win))
@@ -2037,6 +2053,8 @@ namespace gInk
             LastF4Status = retVal;
         }
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr h, int msg, int wParam, int[] lParam);
         [DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         [DllImport("user32.dll", SetLastError = true)]

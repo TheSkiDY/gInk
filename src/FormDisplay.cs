@@ -116,7 +116,7 @@ namespace gInk
             int gpheight = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
             gpButtonsImage = new Bitmap(2400, gpheight);
             gpPenWidthImage = new Bitmap(200, gpheight);
-            textInputPanelImage = new Bitmap(300, gpheight);
+            textInputPanelImage = new Bitmap(400, Root.FormCollection.textInputPanel.Height);
 
             TransparentBrush = new SolidBrush(Color.Transparent);
 
@@ -232,8 +232,7 @@ namespace gInk
                 height = Root.FormCollection.textInputPanel.Height;
                 left = Root.FormCollection.textInputPanel.Left;
                 width = Root.FormCollection.textInputPanel.Width;
-                if (redrawbuttons)
-                    Root.FormCollection.textInputPanel.DrawToBitmap(textInputPanelImage, new Rectangle(0, 0, width, height));
+                Root.FormCollection.textInputPanel.DrawToBitmap(textInputPanelImage, new Rectangle(0, 0, width, height));
 
                 gCanvus.DrawImage(textInputPanelImage, left, top);
             }
@@ -283,8 +282,8 @@ namespace gInk
             if (Root.textInputPanelVisible)
             {
                 top = Root.FormCollection.textInputPanel.Top;
-                height = Root.FormCollection.textInputPanel.Height;
                 left = Root.FormCollection.textInputPanel.Left;
+                height = Root.FormCollection.textInputPanel.Height;
                 width = Root.FormCollection.textInputPanel.Width;
                 if (redrawbuttons)
                     Root.FormCollection.textInputPanel.DrawToBitmap(textInputPanelImage, new Rectangle(0, 0, width, height));
@@ -537,19 +536,29 @@ namespace gInk
 
         public void DrawOtherShapePreview(Graphics g)
         {
+            
+
             Color color = Color.FromArgb(255 - Root.PenAttr[Root.CurrentPen].Transparency, Root.PenAttr[Root.CurrentPen].Color);
+            Pen pen;
 
             //konwersja z himetric na piksele
-            Pen pen = new Pen(color, (float)((double)Root.PenAttr[Root.CurrentPen].Width / 26.45833));
-
+            if (Root.PenWidthEnabled)
+                pen = new Pen(color, (float)((double)Root.GlobalPenWidth / 26.45833));
+            else
+                pen = new Pen(color, (float)((double)Root.PenAttr[Root.CurrentPen].Width / 26.45833));
+               
             g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
             switch (Root.currentDrawingMode)
             {
                 case Root.DrawingMode.Line:
+                    if (Root.DrawnLine.BeginPoint.X == 0 && Root.DrawnLine.BeginPoint.Y == 0)
+                        return;
                     g.DrawLine(pen, Root.DrawnLine.BeginPoint, Root.DrawnLine.EndPoint);
                     break;
                 case Root.DrawingMode.Arrow:
+                    if (Root.DrawnLine.BeginPoint.X == 0 && Root.DrawnLine.BeginPoint.Y == 0)
+                        return;
                     double angle = Math.PI / 12.0;
 
                     double x1, x2, x3, x4;
@@ -584,12 +593,18 @@ namespace gInk
 
                     break;
                 case Root.DrawingMode.Rectangle:
+                    if (Root.DrawnRect.X == 0 && Root.DrawnRect.Y == 0)
+                        return;
                     g.DrawRectangle(pen, Root.DrawnRect);
                     break;
                 case Root.DrawingMode.Ellipse:
+                    if (Root.DrawnRect.X == 0 && Root.DrawnRect.Y == 0)
+                        return;
                     g.DrawEllipse(pen, Root.DrawnRect);
                     break;
                 case Root.DrawingMode.Text:
+                    if (Root.DrawnRect.X == 0 && Root.DrawnRect.Y == 0)
+                        return;
                     if (Root.FitFontToRect)
                     {
                         Pen tempPen = new Pen(Color.Black, 1);
