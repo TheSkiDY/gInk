@@ -46,7 +46,7 @@ namespace gInk
 
         private void comboFont_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var cFont = (ComboBox)sender;
+            var cFont = (ComboBox)sender; 
             var fontFamily = (FontFamily)cFont.Items[e.Index];
             var font = new Font(fontFamily, cFont.Font.SizeInPoints);
 

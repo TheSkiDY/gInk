@@ -1667,9 +1667,6 @@ namespace gInk
 
         public void AddLine()
         {
-            //metoda dodająca linię do zbioru "strokesów", aby łatwo działać na nim resztą
-            //operacji, jak cofanie, redo itd.
-
             //definicja punktów definiujących końcówki linii
             Point[] linePoints = new Point[2];
 
@@ -1883,7 +1880,7 @@ namespace gInk
             Root.currentDrawingMode = Root.DrawingMode.Normal;
             SelectPen(Root.PreviousPen);
         }
-
+            
         private void btEllipse_Click(object sender, EventArgs e)
         {
             if (ToolbarMoved)

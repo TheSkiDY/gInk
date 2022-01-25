@@ -689,11 +689,11 @@ namespace gInk
                     Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
                     if (!stroke.Deleted)
                     {
-                        Rectangle box = stroke.GetBoundingBox();
-                        Point lt = new Point(box.Left, box.Top);
-                        Point rb = new Point(box.Right + 1, box.Bottom + 1);
-                        Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref lt);
-                        Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref rb);
+                        //Rectangle box = stroke.GetBoundingBox();
+                        Point lt = new Point(this.Left, this.Top);
+                        Point rb = new Point(this.Right + 1, this.Bottom + 1);
+                        //Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref lt);
+                        //Root.FormCollection.IC.Renderer.InkSpaceToPixel(gCanvus, ref rb);
                         BitBlt(canvusDc, lt.X, lt.Y, rb.X - lt.X, rb.Y - lt.Y, onestrokeDc, lt.X, lt.Y, (uint)CopyPixelOperation.SourceCopy);
                         if (Root.currentDrawingMode == Root.DrawingMode.Normal)
                             Root.FormCollection.IC.Renderer.Draw(gCanvus, stroke, Root.FormCollection.IC.DefaultDrawingAttributes);
