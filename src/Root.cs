@@ -238,6 +238,7 @@ namespace gInk
 
 			TextGuid = Guid.NewGuid();
 			FontGuid = Guid.NewGuid();
+			FontSizeGuid = Guid.NewGuid();
 
 			//FormCollection i FromDisplay są elementami programu ściśle związanymi z procesem rysowania
 			FormCollection = null;
@@ -848,9 +849,10 @@ namespace gInk
 							if (int.TryParse(sPara, out tempi))
 								CursorSize = tempi;
 							break;
-						case "FONT_INDEX":
-							if (int.TryParse(sPara, out tempi))
-								CurrentFontIndex = tempi;
+						case "FONT_TYPE":
+							string fontName = sPara;
+							FontFamily fontFamily = new FontFamily(fontName);
+							CurrentFontIndex = Array.IndexOf(IFC.Families,fontFamily);
 							break;
 						case "FONT_SIZE":
 							if (int.TryParse(sPara, out tempi))
@@ -1124,8 +1126,9 @@ namespace gInk
 						case "CURSOR_SIZE":
 							sPara = CursorSize.ToString();
 							break;
-						case "FONT_INDEX":
-							sPara = CurrentFontIndex.ToString();
+						case "FONT_TYPE":
+							string fontName = IFC.Families[CurrentFontIndex].Name;
+							sPara = fontName;
 							break;
 						case "FONT_SIZE":
 							sPara = FontSize.ToString();

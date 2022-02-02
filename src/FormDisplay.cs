@@ -536,7 +536,6 @@ namespace gInk
 
         public void DrawOtherShapePreview(Graphics g)
         {
-            
 
             Color color = Color.FromArgb(255 - Root.PenAttr[Root.CurrentPen].Transparency, Root.PenAttr[Root.CurrentPen].Color);
             Pen pen;
